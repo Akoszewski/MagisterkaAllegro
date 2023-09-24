@@ -49,6 +49,9 @@ void App::Run()
                 case ALLEGRO_KEY_D:
                     image->x++;
                     break;
+                case ALLEGRO_KEY_F:
+                    al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));
+                    break;
             }
         }
 

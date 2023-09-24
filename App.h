@@ -1,6 +1,9 @@
 #ifndef APP_H
 #define APP_H
 
+#include "Image.h"
+#include "Constants.h"
+
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_image.h>
@@ -19,7 +22,8 @@ private:
     ALLEGRO_DISPLAY* disp;
     ALLEGRO_FONT* font;
     ALLEGRO_EVENT event;
-    ALLEGRO_BITMAP* image;
+    Image* image;
+    bool isClosed;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "App.h"
 
 App::App(int size_x, int size_y)
-  : width(size_x), height(size_y)
+  : width(size_x), height(size_y), isClosed(false)
 {
     al_init();
     al_install_keyboard();
@@ -18,31 +18,51 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    image = al_load_bitmap("pictures/roi.bmp");
-    if (!image) {
-        printf("Couldn't load image\n");
-        return;
-    }
+    image = new Image();
+    image->Center();
 }
 
 void App::Run()
 {
-    while (true)
+    while (!isClosed)
     {
         al_get_next_event(queue, &event);
-        if((event.type == ALLEGRO_EVENT_KEY_DOWN) || (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)) {
+        if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             break;
         }
+
+        if (event.type == ALLEGRO_EVENT_KEY_CHAR) {
+            switch (event.keyboard.keycode)
+            {  
+                case ALLEGRO_KEY_ESCAPE:
+                    isClosed = true;
+                    break;
+                case ALLEGRO_KEY_W:
+                    image->y--;
+                    break;
+                case ALLEGRO_KEY_A:
+                    image->x--;
+                    break;
+                case ALLEGRO_KEY_S:
+                    image->y++;
+                    break;
+                case ALLEGRO_KEY_D:
+                    image->x++;
+                    break;
+            }
+        }
+
         al_clear_to_color(al_map_rgb(0, 50, 255));
+
+        image->Draw();
         // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
-        al_draw_bitmap(image, (width - al_get_bitmap_width(image))/2, (height - al_get_bitmap_height(image))/2, 0);
+        
         al_flip_display();
     }
 }
 
 App::~App()
 {
-    al_destroy_bitmap(image);
     al_destroy_font(font);
     al_destroy_display(disp);
     al_destroy_event_queue(queue);

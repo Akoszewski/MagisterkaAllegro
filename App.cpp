@@ -18,6 +18,11 @@ App::App(int size_x, int size_y)
         return;
     }
 
+    if (!al_init_primitives_addon()) {
+        fprintf(stderr, "Failed to initialize primitives add-on.\n");
+        return;
+    }
+
     image = new Image("pictures/roi.bmp");
     image->Center();
 
@@ -62,6 +67,7 @@ void App::Run()
 
         al_clear_to_color(al_map_rgb(0, 50, 255));
 
+        image->Draw();
         segmentation.Draw();
         // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
         

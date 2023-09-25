@@ -44,6 +44,13 @@ void Segmentation::NextStep()
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 
     ALLEGRO_COLOR color = maskColors[0];
+
+    int K = 5;
+    std::vector<int> centroids;
+    for (int i = 0; i < K; i++) {
+        centroids.push_back(i * 255/K);
+    }
+
     for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
         for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
 
@@ -52,8 +59,18 @@ void Segmentation::NextStep()
             al_unmap_rgb(readColor, &r, &g, &b);
             int readColorGray = 0.3 * r + 0.59 * g + 0.11 * b;
 
-            printf("%d ", readColorGray);
-            al_put_pixel(x, y, color);
+            int minDiff = 255;
+            int minDiffCentroidIndex = 0;
+            for (int k = 0; k < K; k++) {
+                int diff = abs(readColorGray - centroids[k]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    minDiffCentroidIndex = k;
+                }
+            }
+            printf("%d ", minDiffCentroidIndex);
+
+            al_put_pixel(x, y, maskColors[minDiffCentroidIndex]);
         }
     }
 

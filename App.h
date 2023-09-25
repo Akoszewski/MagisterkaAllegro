@@ -3,6 +3,7 @@
 
 #include "Image.h"
 #include "Constants.h"
+#include "Segmentation.h"
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -17,6 +18,7 @@ public:
     void Run();
     int width;
     int height;
+    Segmentation segmentation;
 private:
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_DISPLAY* disp;

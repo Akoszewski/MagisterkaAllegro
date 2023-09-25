@@ -1,10 +1,12 @@
 #include "Image.h"
 #include "Constants.h"
 
-Image::Image(int x, int y)
+Image::Image() {}
+
+Image::Image(const char* path, int x, int y)
   : x(x), y(y)
 {
-    bmp = al_load_bitmap("pictures/roi.bmp");
+    bmp = al_load_bitmap(path);
     if (!bmp) {
         printf("Couldn't load image\n");
         return;

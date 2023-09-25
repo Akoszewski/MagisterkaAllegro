@@ -18,8 +18,10 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    image = new Image();
+    image = new Image("pictures/roi.bmp");
     image->Center();
+
+    segmentation.Init(image);
 }
 
 void App::Run()
@@ -31,7 +33,7 @@ void App::Run()
             break;
         }
 
-        if (event.type == ALLEGRO_EVENT_KEY_CHAR) {
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             switch (event.keyboard.keycode)
             {  
                 case ALLEGRO_KEY_ESCAPE:
@@ -52,12 +54,15 @@ void App::Run()
                 case ALLEGRO_KEY_F:
                     al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));
                     break;
+                case ALLEGRO_KEY_N:
+                    segmentation.NextStep();
+                    break;
             }
         }
 
         al_clear_to_color(al_map_rgb(0, 50, 255));
 
-        image->Draw();
+        segmentation.Draw();
         // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
         
         al_flip_display();
@@ -66,6 +71,7 @@ void App::Run()
 
 App::~App()
 {
+    delete image;
     al_destroy_font(font);
     al_destroy_display(disp);
     al_destroy_event_queue(queue);

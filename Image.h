@@ -7,7 +7,8 @@
 class Image
 {
 public:
-    Image(int x = 0, int y = 0);
+    Image();
+    Image(const char* path, int x = 0, int y = 0);
     void Center();
     void Draw();
     ~Image();

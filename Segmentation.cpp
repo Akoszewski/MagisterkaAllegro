@@ -43,15 +43,24 @@ void Segmentation::NextStep()
     al_set_target_bitmap(mask.bmp);
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 
-    ALLEGRO_COLOR color = maskColors[0]; // Red color
-    for (int i = 0; i < al_get_bitmap_height(mask.bmp); i++) {
-        for (int j = 0; j < al_get_bitmap_width(mask.bmp); j++) {
-            al_put_pixel(j, i, color);
+    ALLEGRO_COLOR color = maskColors[0];
+    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
+        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
+
+            ALLEGRO_COLOR readColor = al_get_pixel(orygImage->bmp, x, y);
+            unsigned char r, g, b;
+            al_unmap_rgb(readColor, &r, &g, &b);
+            int readColorGray = 0.3 * r + 0.59 * g + 0.11 * b;
+
+            printf("%d ", readColorGray);
+            al_put_pixel(x, y, color);
         }
     }
 
     al_set_target_backbuffer(al_get_current_display());
+
     printf("Next step %d\n", step);
+
     step++;
 }
 

@@ -5,6 +5,7 @@ App::App(int size_x, int size_y)
 {
     al_init();
     al_install_keyboard();
+    al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
 
     queue = al_create_event_queue();
     disp = al_create_display(size_x, size_y);

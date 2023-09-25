@@ -24,7 +24,10 @@ private:
     Pixel pixels[MAX_COLORED_PIXELS];
     unsigned char maskTransparency;
     std::vector<ALLEGRO_COLOR> maskColors;
+    std::vector<int> clusterMeans;
     int step;
+
+    int getClusterFromColor(ALLEGRO_COLOR color);
 };
 
 #endif

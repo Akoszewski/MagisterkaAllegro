@@ -16,6 +16,7 @@ Segmentation::Segmentation()
         al_map_rgba(255, 255, 0, maskTransparency),
         al_map_rgba(0, 255, 255, maskTransparency),
     };
+    clusterMeans.insert(clusterMeans.end(), MAX_MASK_COLORS, 0);
 }
 
 void Segmentation::Init(const Image* img)
@@ -38,6 +39,23 @@ void Segmentation::Init(const Image* img)
     al_set_target_backbuffer(al_get_current_display());
 }
 
+bool areColorsEqual(const ALLEGRO_COLOR &color1, const ALLEGRO_COLOR &color2) {
+    return color1.r == color2.r &&
+           color1.g == color2.g &&
+           color1.b == color2.b &&
+           color1.a == color2.a;
+}
+
+int Segmentation::getClusterFromColor(ALLEGRO_COLOR color)
+{
+    for (int i = 0; i < MAX_MASK_COLORS; i++) {
+        if (areColorsEqual(color, maskColors[i])) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void Segmentation::NextStep()
 {
     al_set_target_bitmap(mask.bmp);
@@ -46,9 +64,15 @@ void Segmentation::NextStep()
     ALLEGRO_COLOR color = maskColors[0];
 
     int K = 5;
+
+    // Set centroids
     std::vector<int> centroids;
     for (int i = 0; i < K; i++) {
-        centroids.push_back(i * 255/K);
+        if (step > 0) {
+            centroids.push_back(clusterMeans[i]);
+        } else {
+            centroids.push_back(i * 255/K);
+        }
     }
 
     for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
@@ -68,15 +92,44 @@ void Segmentation::NextStep()
                     minDiffCentroidIndex = k;
                 }
             }
-            printf("%d ", minDiffCentroidIndex);
+            // printf("%d ", minDiffCentroidIndex);
 
             al_put_pixel(x, y, maskColors[minDiffCentroidIndex]);
         }
     }
 
+    std::vector<int> clusterSums(MAX_MASK_COLORS, 0);
+    std::vector<int> clusterCounts(MAX_MASK_COLORS, 0);
+
+    // Calculate mean of each cluster
+    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
+        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
+            // Identify the cluster we are in
+            ALLEGRO_COLOR readColor = al_get_pixel(mask.bmp, x, y);
+            int cluster = getClusterFromColor(readColor);
+            if (cluster == -1) {
+                printf("Error decoding cluster from color\n");
+                return;
+            }
+
+            // Read actual pixel value here
+            ALLEGRO_COLOR readOrygImgColor = al_get_pixel(orygImage->bmp, x, y);
+            unsigned char r, g, b;
+            al_unmap_rgb(readOrygImgColor, &r, &g, &b);
+            int readColorGray = 0.3 * r + 0.59 * g + 0.11 * b;
+
+            clusterSums[cluster] += readColorGray;
+            clusterCounts[cluster]++;
+        }
+    }
+    
+    for (int i = 0; i < K; i++) {
+        clusterMeans[i] = clusterSums[i] / clusterCounts[i];
+    }
+
     al_set_target_backbuffer(al_get_current_display());
 
-    printf("Next step %d\n", step);
+    printf("Cluster means: %d %d %d %d %d\n", clusterMeans[0], clusterMeans[1], clusterMeans[2], clusterMeans[3], clusterMeans[4]);
 
     step++;
 }

@@ -63,7 +63,7 @@ void Segmentation::NextStep()
 
     ALLEGRO_COLOR color = maskColors[0];
 
-    int K = 5;
+    int K = 4;
 
     // Set centroids
     std::vector<int> centroids;
@@ -92,7 +92,7 @@ void Segmentation::NextStep()
                     minDiffCentroidIndex = k;
                 }
             }
-            // printf("%d ", minDiffCentroidIndex);
+            // printf("%d ", minDiff);
 
             al_put_pixel(x, y, maskColors[minDiffCentroidIndex]);
         }

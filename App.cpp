@@ -24,7 +24,8 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    image = new Image("pictures/roi.bmp");
+    // image = new Image("pictures/roi.bmp");
+    image = new Image("pictures/meanImage.png");
     image->Center();
 
     segmentation.Init(image);

@@ -56,6 +56,27 @@ int Segmentation::getClusterFromColor(ALLEGRO_COLOR color)
     return -1;
 }
 
+int getGray(ALLEGRO_COLOR color)
+{
+    unsigned char r, g, b;
+    al_unmap_rgb(color, &r, &g, &b);
+    return 0.3 * r + 0.59 * g + 0.11 * b;
+}
+
+int getMostSimilarCentroidIdx(const std::vector<int>& centroids, int pxColorGray)
+{
+    int minDiff = 255;
+    int mostSimilarCentroidIdx = 0;
+    for (int k = 0; k < centroids.size(); k++) {
+        int diff = abs(pxColorGray - centroids[k]);
+        if (diff < minDiff) {
+            minDiff = diff;
+            mostSimilarCentroidIdx = k;
+        }
+    }
+    return mostSimilarCentroidIdx;
+}
+
 void Segmentation::NextStep()
 {
     al_set_target_bitmap(mask.bmp);
@@ -77,24 +98,10 @@ void Segmentation::NextStep()
 
     for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
         for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
+            int pxColorGray = getGray(al_get_pixel(orygImage->bmp, x, y));
+            int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
 
-            ALLEGRO_COLOR readColor = al_get_pixel(orygImage->bmp, x, y);
-            unsigned char r, g, b;
-            al_unmap_rgb(readColor, &r, &g, &b);
-            int readColorGray = 0.3 * r + 0.59 * g + 0.11 * b;
-
-            int minDiff = 255;
-            int minDiffCentroidIndex = 0;
-            for (int k = 0; k < K; k++) {
-                int diff = abs(readColorGray - centroids[k]);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    minDiffCentroidIndex = k;
-                }
-            }
-            // printf("%d ", minDiff);
-
-            al_put_pixel(x, y, maskColors[minDiffCentroidIndex]);
+            al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
         }
     }
 
@@ -112,13 +119,9 @@ void Segmentation::NextStep()
                 return;
             }
 
-            // Read actual pixel value here
-            ALLEGRO_COLOR readOrygImgColor = al_get_pixel(orygImage->bmp, x, y);
-            unsigned char r, g, b;
-            al_unmap_rgb(readOrygImgColor, &r, &g, &b);
-            int readColorGray = 0.3 * r + 0.59 * g + 0.11 * b;
+            int pxColorGray = getGray(al_get_pixel(orygImage->bmp, x, y));
 
-            clusterSums[cluster] += readColorGray;
+            clusterSums[cluster] += pxColorGray;
             clusterCounts[cluster]++;
         }
     }

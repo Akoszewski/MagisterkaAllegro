@@ -10,6 +10,8 @@
 #define MAX_COLORED_PIXELS 1000
 #define MAX_MASK_COLORS 10
 
+typedef unsigned char byte;
+
 class Segmentation
 {
 public:
@@ -22,11 +24,12 @@ private:
     const Image* orygImage;
     Image mask;
     Pixel pixels[MAX_COLORED_PIXELS];
-    unsigned char maskTransparency;
+    byte maskTransparency;
     std::vector<ALLEGRO_COLOR> maskColors;
     std::vector<int> clusterMeans;
     int step;
 
+    void initMask(const Image* img, byte xStartPercent, byte yStartPercent, byte xEndPercent, byte yEndPercent);
     int getClusterFromColor(ALLEGRO_COLOR color);
 };
 

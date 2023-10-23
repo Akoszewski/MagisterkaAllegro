@@ -19,20 +19,28 @@ Segmentation::Segmentation()
     clusterMeans.insert(clusterMeans.end(), MAX_MASK_COLORS, 0);
 }
 
-void Segmentation::Init(const Image* img)
+void Segmentation::initMask(const Image* img, byte xStartPercent, byte yStartPercent, byte xEndPercent, byte yEndPercent)
 {
-    orygImage = img;
-    mask.x = orygImage->x;
-    mask.y = orygImage->y;
+    mask.x = orygImage->x + xStartPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
+    mask.y = orygImage->y + yStartPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
 
-    int width = al_get_bitmap_width(orygImage->bmp);
-    int height = al_get_bitmap_height(orygImage->bmp);
+    byte widthPercent = abs(xEndPercent - xStartPercent);
+    byte heightPercent = abs(yEndPercent - yStartPercent);
+
+    int width = widthPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
+    int height = heightPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
 
     mask.bmp = al_create_bitmap(width, height);
     if (!mask.bmp) {
-        fprintf(stderr, "Failed to create new bitmap.\n");
+        puts("Failed to create new bitmap");
         return;
     }
+}
+
+void Segmentation::Init(const Image* img)
+{
+    orygImage = img;
+    initMask(img, 0, 10, 100, 20);
 
     al_set_target_bitmap(mask.bmp);
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
@@ -58,7 +66,7 @@ int Segmentation::getClusterFromColor(ALLEGRO_COLOR color)
 
 int getGray(ALLEGRO_COLOR color)
 {
-    unsigned char r, g, b;
+    byte r, g, b;
     al_unmap_rgb(color, &r, &g, &b);
     return 0.3 * r + 0.59 * g + 0.11 * b;
 }
@@ -84,11 +92,12 @@ void Segmentation::NextStep()
 
     ALLEGRO_COLOR color = maskColors[0];
 
-    int K = 4;
+    int K = 6;
 
     // Set centroids
     std::vector<int> centroids;
-    for (int i = 0; i < K; i++) {
+    for (int i = 0; i < K; i++)
+    {
         if (step > 0) {
             centroids.push_back(clusterMeans[i]);
         } else {
@@ -96,11 +105,12 @@ void Segmentation::NextStep()
         }
     }
 
-    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
-        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
+    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++)
+    {
+        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++)
+        {
             int pxColorGray = getGray(al_get_pixel(orygImage->bmp, x, y));
             int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
-
             al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
         }
     }
@@ -109,8 +119,10 @@ void Segmentation::NextStep()
     std::vector<int> clusterCounts(MAX_MASK_COLORS, 0);
 
     // Calculate mean of each cluster
-    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++) {
-        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++) {
+    for (int y = 0; y < al_get_bitmap_height(mask.bmp); y++)
+    {
+        for (int x = 0; x < al_get_bitmap_width(mask.bmp); x++)
+        {
             // Identify the cluster we are in
             ALLEGRO_COLOR readColor = al_get_pixel(mask.bmp, x, y);
             int cluster = getClusterFromColor(readColor);
@@ -125,9 +137,12 @@ void Segmentation::NextStep()
             clusterCounts[cluster]++;
         }
     }
-    
-    for (int i = 0; i < K; i++) {
-        clusterMeans[i] = clusterSums[i] / clusterCounts[i];
+
+    for (int i = 0; i < K; i++)
+    {
+        if (clusterCounts[i] != 0) {
+            clusterMeans[i] = clusterSums[i] / clusterCounts[i];
+        }
     }
 
     al_set_target_backbuffer(al_get_current_display());

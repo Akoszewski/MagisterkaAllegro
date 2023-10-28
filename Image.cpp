@@ -15,7 +15,10 @@ Image::Image(const char* path, int x, int y)
 
 Image::~Image()
 {
-    al_destroy_bitmap(bmp);
+    if (bmp) {
+        al_destroy_bitmap(bmp);
+        bmp = nullptr;
+    }
 }
 
 void Image::Center()

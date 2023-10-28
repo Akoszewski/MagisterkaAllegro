@@ -19,13 +19,13 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    if (!al_init_primitives_addon()) {
-        fprintf(stderr, "Failed to initialize primitives add-on.\n");
-        return;
-    }
+    // if (!al_init_primitives_addon()) {
+    //     fprintf(stderr, "Failed to initialize primitives add-on.\n");
+    //     return;
+    // }
 
-    // image = new Image("pictures/roi.bmp");
-    image = new Image("pictures/meanImage.png");
+    // image = std::make_shared<Image>("pictures/roi.bmp");
+    image = std::make_shared<Image>("pictures/meanImage.png");
     image->Center();
 
     segmentation.Init(image);
@@ -79,7 +79,6 @@ void App::Run()
 
 App::~App()
 {
-    delete image;
     al_destroy_font(font);
     al_destroy_display(disp);
     al_destroy_event_queue(queue);

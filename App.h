@@ -3,7 +3,7 @@
 
 #include "Image.h"
 #include "Constants.h"
-#include "Segmentation.h"
+#include "Segmentation/Segmentation.h"
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -24,7 +24,7 @@ private:
     ALLEGRO_DISPLAY* disp;
     ALLEGRO_FONT* font;
     ALLEGRO_EVENT event;
-    Image* image;
+    std::shared_ptr<Image> image;
     bool isClosed;
 };
 

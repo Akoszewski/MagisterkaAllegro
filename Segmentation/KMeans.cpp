@@ -56,8 +56,6 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
 
 void KMeans::NextStep(std::shared_ptr<const Image> orygImage, const Image& mask)
 {
-    ALLEGRO_COLOR color = maskColors[0];
-
     // Set centroids
     std::vector<int> centroids;
     for (int i = 0; i < K; i++)

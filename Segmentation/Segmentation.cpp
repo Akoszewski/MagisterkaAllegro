@@ -1,8 +1,9 @@
 #include "Segmentation.h"
 
 Segmentation::Segmentation()
-  : maskTransparency(60)
+  : maskTransparency(0)
 {
+    printf("Przezroczystosc: %d\n", maskTransparency);
     maskColors =
     {
         al_map_rgba(100, 0, 0, maskTransparency),
@@ -17,7 +18,7 @@ Segmentation::Segmentation()
         al_map_rgba(0, 255, 255, maskTransparency),
     };
 
-    SetStrategy(std::make_unique<KMeans>(6));
+    SetStrategy(std::make_unique<Thresholding>(100));
 }
 
 void Segmentation::SetStrategy(std::unique_ptr<SegmentationStrategy> strategy)
@@ -28,7 +29,7 @@ void Segmentation::SetStrategy(std::unique_ptr<SegmentationStrategy> strategy)
     }
 }
 
-void Segmentation::initMask(std::shared_ptr<Image> img, byte xStartPercent, byte yStartPercent, byte xEndPercent, byte yEndPercent)
+void Segmentation::initMask(std::shared_ptr<Image> img, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
 {
     mask.x = orygImage->x + xStartPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
     mask.y = orygImage->y + yStartPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
@@ -49,7 +50,7 @@ void Segmentation::initMask(std::shared_ptr<Image> img, byte xStartPercent, byte
 void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
-    initMask(img, 0, 10, 100, 20);
+    initMask(img, 0, 100, 60, 80);
 
     al_set_target_bitmap(mask.bmp);
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));

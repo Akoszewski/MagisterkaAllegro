@@ -9,7 +9,7 @@ public:
     KMeans(int K);
     ~KMeans();
     void Init(std::vector<ALLEGRO_COLOR> maskColors);
-    void NextStep(std::shared_ptr<const Image> orygImage, const Image& mask);
+    void NextStep(std::shared_ptr<const Image> orygImage, const Mask& mask);
 private:
     int K;
     std::vector<ALLEGRO_COLOR> maskColors;

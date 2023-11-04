@@ -59,7 +59,7 @@ int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 
 
 
-void Thresholding::NextStep(std::shared_ptr<const Image> orygImage, const Image& mask)
+void Thresholding::NextStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
 {
     int histogram[256] = {0};
     int roiWidth = al_get_bitmap_width(mask.bmp);

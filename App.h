@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "Image.h"
+#include "Mask.h"
 #include "Constants.h"
 #include "Segmentation/Segmentation.h"
 

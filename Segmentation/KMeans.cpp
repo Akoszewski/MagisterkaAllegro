@@ -54,7 +54,7 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
     return -1;
 }
 
-void KMeans::NextStep(std::shared_ptr<const Image> orygImage, const Image& mask)
+void KMeans::NextStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
 {
     // Set centroids
     std::vector<int> centroids;

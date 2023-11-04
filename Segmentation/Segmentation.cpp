@@ -29,30 +29,12 @@ void Segmentation::SetStrategy(std::unique_ptr<SegmentationStrategy> strategy)
     }
 }
 
-void Segmentation::initMask(std::shared_ptr<Image> img, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
-{
-    mask.x = orygImage->x + xStartPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
-    mask.y = orygImage->y + yStartPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
-
-    byte widthPercent = abs(xEndPercent - xStartPercent);
-    byte heightPercent = abs(yEndPercent - yStartPercent);
-
-    int width = widthPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
-    int height = heightPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
-
-    mask.bmp = al_create_bitmap(width, height);
-    if (!mask.bmp) {
-        puts("Failed to create new bitmap");
-        return;
-    }
-}
-
-void Segmentation::Init(std::shared_ptr<Image> img)
+void Segmentation::Init(std::shared_ptr<Image> img, std::unique_ptr<Mask> mask)
 {
     orygImage = img;
-    initMask(img, 0, 100, 60, 80);
+    this->mask = std::move(mask);
 
-    al_set_target_bitmap(mask.bmp);
+    al_set_target_bitmap(this->mask->bmp);
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
     al_set_target_backbuffer(al_get_current_display());
 
@@ -61,17 +43,17 @@ void Segmentation::Init(std::shared_ptr<Image> img)
 
 void Segmentation::NextStep()
 {
-    al_set_target_bitmap(mask.bmp);
+    al_set_target_bitmap(mask->bmp);
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 
     if (strategy) { 
-        strategy->NextStep(orygImage, mask);
+        strategy->NextStep(orygImage, *mask);
     }
 }
 
 void Segmentation::Draw()
 {
-    mask.Draw();
+    mask->Draw();
 }
 
 Segmentation::~Segmentation() {}

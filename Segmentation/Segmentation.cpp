@@ -3,6 +3,13 @@
 Segmentation::Segmentation()
 {}
 
+// For otsu method:
+// Best threshold: 100
+// Best threshold: 196
+// Best threshold: 141
+// Best threshold: 138
+// Best threshold: 116
+
 void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;

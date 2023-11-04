@@ -16,15 +16,13 @@ public:
     void Init(std::shared_ptr<Image> img, std::unique_ptr<Mask> mask);
     void SetStrategy(std::unique_ptr<SegmentationStrategy> strategy);
     void Draw();
-    void NextStep();
+    void RunStep();
     std::unique_ptr<Mask> mask;
 
 private:
     std::shared_ptr<Image> orygImage;
-    Pixel pixels[MAX_COLORED_PIXELS];
-    byte maskTransparency;
-    std::vector<ALLEGRO_COLOR> maskColors;
-    std::unique_ptr<SegmentationStrategy> strategy{};
+    std::unique_ptr<SegmentationStrategy> strategy;
+    // Pixel pixels[MAX_COLORED_PIXELS];
 };
 
 #endif

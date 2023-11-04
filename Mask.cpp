@@ -1,7 +1,22 @@
 #include "Mask.h"
 
 Mask::Mask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
-{
+  : maskTransparency(0)
+{    
+    printf("Przezroczystosc: %d\n", maskTransparency);
+    maskColors =
+    {
+        al_map_rgba(100, 0, 0, maskTransparency),
+        al_map_rgba(0, 100, 0, maskTransparency),
+        al_map_rgba(0, 0, 100, maskTransparency),
+        al_map_rgba(255, 0, 0, maskTransparency),
+        al_map_rgba(0, 255, 0, maskTransparency),
+        al_map_rgba(0, 0, 255, maskTransparency),
+        al_map_rgba(100, 100, 0, maskTransparency),
+        al_map_rgba(0, 100, 100, maskTransparency),
+        al_map_rgba(255, 255, 0, maskTransparency),
+        al_map_rgba(0, 255, 255, maskTransparency),
+    };
     initMask(orygImage, xStartPercent, xEndPercent, yStartPercent, yEndPercent);
 }
 

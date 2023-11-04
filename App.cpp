@@ -62,7 +62,7 @@ void App::Run()
                     al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));
                     break;
                 case ALLEGRO_KEY_N:
-                    segmentation.NextStep();
+                    segmentation.RunStep();
                     break;
             }
         }

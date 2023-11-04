@@ -8,7 +8,7 @@ KMeans::KMeans(int K)
 
 KMeans::~KMeans(){}
 
-void KMeans::Init(std::vector<ALLEGRO_COLOR> maskColors)
+void KMeans::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
 {
     this->maskColors = maskColors;
     clusterMeans.insert(clusterMeans.end(), K, 0);
@@ -54,7 +54,7 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
     return -1;
 }
 
-void KMeans::NextStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
 {
     // Set centroids
     std::vector<int> centroids;

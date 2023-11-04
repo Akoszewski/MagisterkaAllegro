@@ -8,7 +8,7 @@ Thresholding::Thresholding(int threshold)
 
 Thresholding::~Thresholding(){}
 
-void Thresholding::Init(std::vector<ALLEGRO_COLOR> maskColors)
+void Thresholding::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
 {
     this->maskColors = maskColors;
 }
@@ -59,7 +59,7 @@ int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 
 
 
-void Thresholding::NextStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
 {
     int histogram[256] = {0};
     int roiWidth = al_get_bitmap_width(mask.bmp);
@@ -80,9 +80,9 @@ void Thresholding::NextStep(std::shared_ptr<const Image> orygImage, const Mask& 
         for (int x = 0; x < roiWidth; x++)
         {
             int pxColorGray = getGray(al_get_pixel(orygImage->bmp, x + mask.x - orygImage->x, y + mask.y - orygImage->y));
-            // int matchingPixelGroupIdx = getMatchingPixelGroup({132}, pxColorGray);
-            int matchingPixelGroupIdx = getMatchingPixelGroup({step * 10}, pxColorGray);
-            al_put_pixel(x, y, maskColors[matchingPixelGroupIdx]);
+            int matchingPixelGroupIdx = getMatchingPixelGroup({threshold}, pxColorGray);
+            // int matchingPixelGroupIdx = getMatchingPixelGroup({step * 10}, pxColorGray);
+            al_put_pixel(x, y, mask.maskColors[matchingPixelGroupIdx]);
 
             histogram[pxColorGray]++;
             sumTotalIntensity += pxColorGray;

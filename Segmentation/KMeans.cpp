@@ -54,7 +54,7 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
     return -1;
 }
 
-void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+int KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask, int param)
 {
     // Set centroids
     std::vector<int> centroids;
@@ -90,7 +90,7 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
             int cluster = getClusterFromColor(readColor);
             if (cluster == -1) {
                 printf("Error decoding cluster from color\n");
-                return;
+                return -1;
             }
 
             int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x, y));
@@ -112,4 +112,6 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
     printf("Cluster means: %d %d %d %d %d\n", clusterMeans[0], clusterMeans[1], clusterMeans[2], clusterMeans[3], clusterMeans[4]);
 
     step++;
+
+    return 0;
 }

@@ -21,6 +21,7 @@ public:
 private:
     std::shared_ptr<Image> orygImage;
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
+    void prepareGfx(int regionIdx);
     
     // Pixel pixels[MAX_COLORED_PIXELS];
 };

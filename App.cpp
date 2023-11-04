@@ -69,7 +69,7 @@ void App::Run()
         al_clear_to_color(al_map_rgb(0, 50, 255));
 
         image->Draw();
-        segmentation.Draw();
+        // segmentation.Draw();
         // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
         
         al_flip_display();

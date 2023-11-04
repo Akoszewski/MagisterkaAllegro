@@ -28,13 +28,36 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     }
 }
 
+void Segmentation::prepareGfx(int regionIdx)
+{
+    al_clear_to_color(al_map_rgb(0, 50, 255));
+    orygImage->Draw();
+
+    al_set_target_bitmap(masks[regionIdx].bmp.get());
+    al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+}
+
 void Segmentation::RunStep()
 {
     for (int i = 0; i < masks.size(); i++)
     {
-        al_set_target_bitmap(masks[i].bmp.get());
-        al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-        strategies[i]->RunStep(orygImage, masks[i]);
+        int maxVariance = 0;
+        int bestThreshold = 0;
+        for (int j = 0; j < 255; j++)
+        {
+            prepareGfx(i);
+            int variance = strategies[i]->RunStep(orygImage, masks[i], j);
+            Draw();
+
+            if (maxVariance < variance) {
+                maxVariance = variance;
+                bestThreshold = j;
+            }
+        }
+        printf("Best threshold: %d\n", bestThreshold);
+        prepareGfx(i);
+        strategies[i]->RunStep(orygImage, masks[i], bestThreshold);
+        Draw();
     }
 }
 
@@ -44,6 +67,8 @@ void Segmentation::Draw()
     {
         mask.Draw();
     }
+    // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
+    al_flip_display();
 }
 
 Segmentation::~Segmentation() {}

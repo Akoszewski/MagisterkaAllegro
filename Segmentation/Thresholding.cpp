@@ -59,7 +59,7 @@ int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 
 
 
-void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+int Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask, int param)
 {
     int histogram[256] = {0};
     int roiWidth = mask.width;
@@ -80,7 +80,7 @@ void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& m
         for (int x = 0; x < roiWidth; x++)
         {
             int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
-            int matchingPixelGroupIdx = getMatchingPixelGroup({threshold}, pxColorGray);
+            int matchingPixelGroupIdx = getMatchingPixelGroup({param}, pxColorGray);
             // int matchingPixelGroupIdx = getMatchingPixelGroup({step * 10}, pxColorGray);
             al_put_pixel(x, y, mask.maskColors[matchingPixelGroupIdx]);
 
@@ -91,18 +91,18 @@ void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& m
         }
     }
 
-    pixelGroupMeans[0] = pixelGroupSums[0] / (double)pixelGroupWeights[0];
-    pixelGroupMeans[1] = pixelGroupSums[1] / (double)pixelGroupWeights[1];
-    printf("pixelGroupSums[0]: %d\n", pixelGroupSums[0]);
-    printf("pixelGroupWeights[0]: %d\n", pixelGroupWeights[0]);
-    printf("Sum: %d\n", pixelGroupSums[0]);
-    printf("Weight: %d\n", pixelGroupWeights[0]);
-    printf("pixelGroupMeans: %f %f\n", pixelGroupMeans[0], pixelGroupMeans[1]);
+    pixelGroupMeans[0] = (pixelGroupWeights[0] > 0) ? pixelGroupSums[0] / (double)pixelGroupWeights[0] : 0;
+    pixelGroupMeans[1] = (pixelGroupWeights[1] > 0) ? pixelGroupSums[1] / (double)pixelGroupWeights[1] : 0;
     // val = wB * wF * ((sumB / wB) - mF) * ((sumB / wB) - mF)
-    long long varianceBetween = (long)pixelGroupWeights[0] * (long)pixelGroupWeights[1] * (pixelGroupMeans[1] - pixelGroupMeans[0]) * (pixelGroupMeans[1] - pixelGroupMeans[0]);
-    printf("varianceBetween: %lld\n", varianceBetween);
-    printf("step: %d\n\n", step);
+    long long varianceBetween = 0;
+    if (pixelGroupWeights[0] != 0 && pixelGroupWeights[1]!= 0) {
+        varianceBetween = (long)pixelGroupWeights[0] * (long)pixelGroupWeights[1] * (pixelGroupMeans[1] - pixelGroupMeans[0]) * (pixelGroupMeans[1] - pixelGroupMeans[0]);
+    }
+    // printf("varianceBetween: %lld\n", varianceBetween);
+    // printf("step: %d\n\n", step);
 
     al_set_target_backbuffer(al_get_current_display());
     step++;
+
+    return varianceBetween;
 }

@@ -3,19 +3,32 @@
 
 #include <stdio.h>
 #include <allegro5/allegro5.h>
+#include <memory>
+
+struct BitmapDeleter {
+    void operator()(ALLEGRO_BITMAP* bmp) const
+    {
+        if (bmp) {
+            al_destroy_bitmap(bmp);
+            bmp = nullptr;
+        }
+    }
+};
 
 class Image
 {
 public:
     Image();
     Image(const char* path, int x = 0, int y = 0);
+
     void Center();
     void Draw();
-    ~Image();
 
     int x;
     int y;
-    ALLEGRO_BITMAP *bmp;
+    int width;
+    int height;
+    std::unique_ptr<ALLEGRO_BITMAP, BitmapDeleter> bmp;
 };
 
 #endif

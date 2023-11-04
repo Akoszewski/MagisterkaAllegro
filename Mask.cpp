@@ -22,18 +22,25 @@ Mask::Mask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercen
 
 void Mask::initMask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
 {
-    x = orygImage->x + xStartPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
-    y = orygImage->y + yStartPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
+    x = orygImage->x + xStartPercent/100.0f * orygImage->width;
+    y = orygImage->y + yStartPercent/100.0f * orygImage->height;
 
     byte widthPercent = abs(xEndPercent - xStartPercent);
     byte heightPercent = abs(yEndPercent - yStartPercent);
 
-    int width = widthPercent/100.0f * al_get_bitmap_width(orygImage->bmp);
-    int height = heightPercent/100.0f * al_get_bitmap_height(orygImage->bmp);
+    int bmpWidth = widthPercent/100.0f * orygImage->width;
+    int bmpHeight = heightPercent/100.0f * orygImage->height;
 
-    bmp = al_create_bitmap(width, height);
+    bmp = std::unique_ptr<ALLEGRO_BITMAP, BitmapDeleter>(al_create_bitmap(bmpWidth, bmpHeight));
     if (!bmp) {
         puts("Failed to create new bitmap");
         return;
     }
+
+    width = al_get_bitmap_width(bmp.get());
+    height = al_get_bitmap_height(bmp.get());
+
+    al_set_target_bitmap(bmp.get());
+    al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+    al_set_target_backbuffer(al_get_current_display());
 }

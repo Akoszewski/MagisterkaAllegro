@@ -62,8 +62,8 @@ int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
 {
     int histogram[256] = {0};
-    int roiWidth = al_get_bitmap_width(mask.bmp);
-    int roiHeight = al_get_bitmap_height(mask.bmp);
+    int roiWidth = mask.width;
+    int roiHeight = mask.height;
     int totalPixels = roiWidth * roiHeight;
     int sumTotalIntensity = 0;
     int w1 = 0;
@@ -79,7 +79,7 @@ void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& m
     {
         for (int x = 0; x < roiWidth; x++)
         {
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp, x + mask.x - orygImage->x, y + mask.y - orygImage->y));
+            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
             int matchingPixelGroupIdx = getMatchingPixelGroup({threshold}, pxColorGray);
             // int matchingPixelGroupIdx = getMatchingPixelGroup({step * 10}, pxColorGray);
             al_put_pixel(x, y, mask.maskColors[matchingPixelGroupIdx]);
@@ -93,8 +93,8 @@ void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& m
 
     pixelGroupMeans[0] = pixelGroupSums[0] / (double)pixelGroupWeights[0];
     pixelGroupMeans[1] = pixelGroupSums[1] / (double)pixelGroupWeights[1];
-    // printf("pixelGroupSums[0]: %d\n", pixelGroupSums[0]);
-    // printf("pixelGroupWeights[0]: %d\n", pixelGroupWeights[0]);
+    printf("pixelGroupSums[0]: %d\n", pixelGroupSums[0]);
+    printf("pixelGroupWeights[0]: %d\n", pixelGroupWeights[0]);
     printf("Sum: %d\n", pixelGroupSums[0]);
     printf("Weight: %d\n", pixelGroupWeights[0]);
     printf("pixelGroupMeans: %f %f\n", pixelGroupMeans[0], pixelGroupMeans[1]);

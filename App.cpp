@@ -27,8 +27,7 @@ App::App(int size_x, int size_y)
     // image = std::make_shared<Image>("pictures/roi.bmp");
     image = std::make_shared<Image>("pictures/meanImage.png");
     image->Center();
-
-    segmentation.Init(image, std::make_unique<Mask>(image, 0, 100, 60, 90));
+    segmentation.Init(image);
 }
 
 void App::Run()

@@ -13,13 +13,13 @@ class Segmentation
 public:
     Segmentation();
     ~Segmentation();
-    void Init(std::shared_ptr<Image> img);
+    void Init(std::shared_ptr<const Image> img);
     void Draw();
     void RunStep();
     std::vector<Mask> masks;
 
 private:
-    std::shared_ptr<Image> orygImage;
+    std::shared_ptr<const Image> orygImage;
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
     
     // Pixel pixels[MAX_COLORED_PIXELS];

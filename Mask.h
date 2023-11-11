@@ -11,10 +11,10 @@ typedef unsigned char byte;
 class Mask : public Image
 {
 public:
-    Mask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent);
+    Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent);
     std::vector<ALLEGRO_COLOR> maskColors;
 private:
-    void initMask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent);
+    void initMask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent);
     byte maskTransparency;
 };
 

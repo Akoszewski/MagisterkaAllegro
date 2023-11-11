@@ -3,14 +3,14 @@
 Segmentation::Segmentation()
 {}
 
-void Segmentation::Init(std::shared_ptr<Image> img)
+void Segmentation::Init(std::shared_ptr<const Image> img)
 {
     orygImage = img;
 
     int percentageInterval = 20;
     for (int i = 0; i < 100; i += percentageInterval)
     {
-        masks.emplace_back(orygImage, 0, 100, i, i+percentageInterval);
+        masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
         strategies.push_back(std::make_unique<KMeans>(3));
     }
     // masks.emplace_back(orygImage, 0, 100, 0, 20);
@@ -40,7 +40,7 @@ void Segmentation::RunStep()
     {
         al_set_target_bitmap(masks[i].bmp.get());
         al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-        strategies[i]->RunStep(orygImage, masks[i]);
+        strategies[i]->RunStep(*orygImage.get(), masks[i]);
     }
 }
 

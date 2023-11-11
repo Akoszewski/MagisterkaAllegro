@@ -1,6 +1,6 @@
 #include "Mask.h"
 
-Mask::Mask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
+Mask::Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
   : maskTransparency(0)
 {    
     printf("Przezroczystosc: %d\n", maskTransparency);
@@ -20,16 +20,16 @@ Mask::Mask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercen
     initMask(orygImage, xStartPercent, xEndPercent, yStartPercent, yEndPercent);
 }
 
-void Mask::initMask(std::shared_ptr<Image> orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
+void Mask::initMask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
 {
-    x = orygImage->x + xStartPercent/100.0f * orygImage->width;
-    y = orygImage->y + yStartPercent/100.0f * orygImage->height;
+    x = orygImage.x + xStartPercent/100.0f * orygImage.width;
+    y = orygImage.y + yStartPercent/100.0f * orygImage.height;
 
     byte widthPercent = abs(xEndPercent - xStartPercent);
     byte heightPercent = abs(yEndPercent - yStartPercent);
 
-    int bmpWidth = widthPercent/100.0f * orygImage->width;
-    int bmpHeight = heightPercent/100.0f * orygImage->height;
+    int bmpWidth = widthPercent/100.0f * orygImage.width;
+    int bmpHeight = heightPercent/100.0f * orygImage.height;
 
     bmp = std::unique_ptr<ALLEGRO_BITMAP, BitmapDeleter>(al_create_bitmap(bmpWidth, bmpHeight));
     if (!bmp) {

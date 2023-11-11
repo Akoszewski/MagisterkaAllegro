@@ -54,7 +54,7 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
     return -1;
 }
 
-void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+void KMeans::RunStep(const Image& orygImage, const Mask& mask)
 {
     // Set centroids
     std::vector<int> centroids;
@@ -71,7 +71,7 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
     {
         for (int x = 0; x < mask.width; x++)
         {
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
+            int pxColorGray = getGray(al_get_pixel(orygImage.bmp.get(), x + mask.x - orygImage.x, y + mask.y - orygImage.y));
             
             int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
             al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
@@ -94,7 +94,7 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
                 return;
             }
 
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
+            int pxColorGray = getGray(al_get_pixel(orygImage.bmp.get(), x + mask.x - orygImage.x, y + mask.y - orygImage.y));
 
             clusterSums[cluster] += pxColorGray;
             clusterCounts[cluster]++;

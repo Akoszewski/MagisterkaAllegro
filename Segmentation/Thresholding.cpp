@@ -59,7 +59,7 @@ int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 
 
 
-void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
+void Thresholding::RunStep(const Image& orygImage, const Mask& mask)
 {
     int histogram[256] = {0};
     int roiWidth = mask.width;
@@ -79,7 +79,7 @@ void Thresholding::RunStep(std::shared_ptr<const Image> orygImage, const Mask& m
     {
         for (int x = 0; x < roiWidth; x++)
         {
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
+            int pxColorGray = getGray(al_get_pixel(orygImage.bmp.get(), x + mask.x - orygImage.x, y + mask.y - orygImage.y));
             int matchingPixelGroupIdx = getMatchingPixelGroup({threshold}, pxColorGray);
             // int matchingPixelGroupIdx = getMatchingPixelGroup({step * 10}, pxColorGray);
             al_put_pixel(x, y, mask.maskColors[matchingPixelGroupIdx]);

@@ -25,7 +25,8 @@ App::App(int size_x, int size_y)
     // }
 
     // image = std::make_shared<Image>("pictures/roi.bmp");
-    image = std::make_shared<Image>("pictures/meanImage.png");
+    image = std::make_shared<Image>("pictures/median.png");
+    // image = std::make_shared<Image>("pictures/meanImage.png");
     image->Center();
     segmentation.Init(image);
 }

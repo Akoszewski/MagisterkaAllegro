@@ -71,7 +71,8 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
     {
         for (int x = 0; x < mask.width; x++)
         {
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x, y));
+            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
+            
             int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
             al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
         }
@@ -93,7 +94,7 @@ void KMeans::RunStep(std::shared_ptr<const Image> orygImage, const Mask& mask)
                 return;
             }
 
-            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x, y));
+            int pxColorGray = getGray(al_get_pixel(orygImage->bmp.get(), x + mask.x - orygImage->x, y + mask.y - orygImage->y));
 
             clusterSums[cluster] += pxColorGray;
             clusterCounts[cluster]++;

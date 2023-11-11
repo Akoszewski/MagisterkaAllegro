@@ -7,20 +7,26 @@ void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
 
-    masks.emplace_back(orygImage, 0, 100, 0, 20);
-    strategies.push_back(std::make_unique<Thresholding>(100));
+    int percentageInterval = 20;
+    for (int i = 0; i < 100; i += percentageInterval)
+    {
+        masks.emplace_back(orygImage, 0, 100, i, i+percentageInterval);
+        strategies.push_back(std::make_unique<KMeans>(3));
+    }
+    // masks.emplace_back(orygImage, 0, 100, 0, 20);
+    // strategies.push_back(std::make_unique<KMeans>(2));
 
-    masks.emplace_back(orygImage, 0, 100, 20, 40);
-    strategies.push_back(std::make_unique<Thresholding>(120));
+    // masks.emplace_back(orygImage, 0, 100, 20, 40);
+    // strategies.push_back(std::make_unique<KMeans>(2));
 
-    masks.emplace_back(orygImage, 0, 100, 40, 60);
-    strategies.push_back(std::make_unique<Thresholding>(140));
+    // masks.emplace_back(orygImage, 0, 100, 40, 60);
+    // strategies.push_back(std::make_unique<KMeans>(2));
 
-    masks.emplace_back(orygImage, 0, 100, 60, 80);
-    strategies.push_back(std::make_unique<Thresholding>(120));
+    // masks.emplace_back(orygImage, 0, 100, 60, 80);
+    // strategies.push_back(std::make_unique<KMeans>(2));
 
-    masks.emplace_back(orygImage, 0, 100, 80, 100);
-    strategies.push_back(std::make_unique<Thresholding>(120));
+    // masks.emplace_back(orygImage, 0, 100, 80, 100);
+    // strategies.push_back(std::make_unique<KMeans>(2));
 
     for (int i = 0; i < masks.size(); i++)
     {

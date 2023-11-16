@@ -15,6 +15,14 @@ Image::Image(const char* path, int x, int y)
     height = al_get_bitmap_height(bmp.get());
 }
 
+Image::Image(const Image& other)
+  : x(other.x), y(other.y), width(other.width), height(other.height)
+{
+    if (other.bmp) {
+        bmp = std::unique_ptr<ALLEGRO_BITMAP, BitmapDeleter>(al_clone_bitmap(other.bmp.get()));
+    }
+}
+
 void Image::Center()
 {
     x = (SCREEN_WIDTH - width)/2;
@@ -23,6 +31,8 @@ void Image::Center()
 
 void Image::Draw()
 {
-    // printf("bmp: %p, %d %d\n", x, y);
+    if (!bmp) {
+        printf("Trying to draw an empty image\n");
+    }
     al_draw_bitmap(bmp.get(), x, y, 0);
 }

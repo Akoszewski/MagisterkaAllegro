@@ -20,6 +20,7 @@ class Image
 public:
     Image();
     Image(const char* path, int x = 0, int y = 0);
+    Image(const Image& other);
 
     void Center();
     void Draw();

@@ -3,6 +3,7 @@
 
 #include "../Mask.h"
 #include "Pixel.h"
+#include "Utils.h"
 
 #include <vector>
 #include <memory>

@@ -3,7 +3,6 @@
 Mask::Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
   : maskTransparency(0)
 {    
-    printf("Przezroczystosc: %d\n", maskTransparency);
     maskColors =
     {
         al_map_rgba(100, 0, 0, maskTransparency),

@@ -1,12 +1,11 @@
 #ifndef MASK_H
 #define MASK_H
 
-#include <memory>
 #include "Image.h"
+#include "Utils.h"
 
 #include <vector>
-
-typedef unsigned char byte;
+#include <memory>
 
 class Mask : public Image
 {

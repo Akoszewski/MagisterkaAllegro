@@ -27,8 +27,11 @@ public:
     std::vector<Mask> masks;
 private:
     std::shared_ptr<Image> orygImage;
+    std::shared_ptr<Image> layerVisualization;
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
     int step;
+    ALLEGRO_COLOR chooseLayerForMorphoology(const Mask& mask);
+    bool areColorsEqual(ALLEGRO_COLOR color1, ALLEGRO_COLOR color2);
 
     // Pixel pixels[MAX_COLORED_PIXELS];
 };

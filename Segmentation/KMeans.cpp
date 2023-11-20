@@ -103,7 +103,7 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
 
     al_set_target_backbuffer(al_get_current_display());
 
-    printf("Cluster means: %d %d %d %d %d\n", clusterMeans[0], clusterMeans[1], clusterMeans[2], clusterMeans[3], clusterMeans[4]);
+    // printf("Cluster means: %d %d %d %d %d\n", clusterMeans[0], clusterMeans[1], clusterMeans[2], clusterMeans[3], clusterMeans[4]);
 
     step++;
 }

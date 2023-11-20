@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 Segmentation::Segmentation()
   : step(0)
@@ -18,6 +19,8 @@ Segmentation::Segmentation()
 void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
+    layerVisualization = std::make_shared<Image>(*img.get());
+    layerVisualization->y += 200;
 
     int percentageInterval = 20;
     for (int i = 0; i < 100; i += percentageInterval)
@@ -46,6 +49,22 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     {
         strategies[i]->Init(masks[i].maskColors);
     }
+
+}
+
+double gaussian(int x, int y, double sigma)
+{
+    return exp(-(x*x + y*y) / (2 * sigma * sigma)) / (2 * M_PI * sigma * sigma);
+}
+
+ALLEGRO_COLOR Segmentation::chooseLayerForMorphoology(const Mask& mask)
+{
+    return mask.maskColors[0];
+}
+
+bool Segmentation::areColorsEqual(ALLEGRO_COLOR color1, ALLEGRO_COLOR color2)
+{
+    return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
 }
 
 std::unique_ptr<Image> Segmentation::filterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType)
@@ -88,6 +107,8 @@ std::unique_ptr<Image> Segmentation::filterImage(const Image& orygImage, int win
                 std::nth_element(window.begin(), window.begin() + window.size()/2, window.end());
                 int median = window[windowWidth * windowHeight / 2];
                 finalColor = al_map_rgb(median, median, median);
+            } else if (filterType == FilterType::Gaussian) {
+                // TODO: Add code here
             }
             al_put_pixel(x, y, finalColor);
         }
@@ -99,18 +120,47 @@ std::unique_ptr<Image> Segmentation::filterImage(const Image& orygImage, int win
     return image;
 }
 
-
+// Trzy etapy: filtracja, segmentacja i operacje morfologiczne
 void Segmentation::RunStep()
 {
     if (step == 0) {
     // std::unique_ptr<Image>(filteredImage) = filterImage(*orygImage.get(), 5, 5, FilterType::Median);
-    orygImage = filterImage(*orygImage.get(), 5, 5, FilterType::Median);
-    } else {
+    orygImage = filterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)
         {
             al_set_target_bitmap(masks[i].bmp.get());
             al_clear_to_color(al_map_rgba(0, 0, 0, 0));
             strategies[i]->RunStep(*orygImage.get(), masks[i]);
+        }
+    } else {
+        for (int i = 0; i < masks.size(); i++)
+        {
+            i = 4;
+
+            ALLEGRO_COLOR layerColor = chooseLayerForMorphoology(masks[i]);
+
+            al_set_target_bitmap(layerVisualization->bmp.get());
+            al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+            al_draw_bitmap_region(orygImage->bmp.get(), masks[i].x - orygImage->x, masks[i].y - orygImage->y,
+                    masks[i].width, masks[i].height, masks[i].x - orygImage->x, masks[i].y - orygImage->y, 0);
+            for (int y = 0; y < masks[i].height; y++)
+            {
+                for (int x = 0; x < masks[i].width; x++)
+                {
+                    ALLEGRO_COLOR readColor = al_get_pixel(masks[i].bmp.get(), x, y);
+                    if (!areColorsEqual(readColor, layerColor)) {
+                        layerVisualization->bmp.get();
+                        al_put_pixel(x + masks[i].x - orygImage->x, y + masks[i].y - orygImage->y, al_map_rgba(0, 0, 0, 0));
+                        // al_put_pixel(x, y, al_map_rgba(0, 0, 0, 0));
+                    }
+                    // al_put_pixel(x + masks[i].x - orygImage->x, y + masks[i].y - orygImage->y, readColor);
+                }
+            }
+
+            al_set_target_backbuffer(al_get_current_display());
+
+            break;
         }
     }
     step++;
@@ -122,6 +172,9 @@ void Segmentation::Draw()
     for (auto &mask : masks)
     {
         mask.Draw();
+    }
+    if (layerVisualization->bmp.get()) {
+        layerVisualization->Draw();
     }
 }
 

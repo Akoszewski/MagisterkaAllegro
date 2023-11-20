@@ -5,7 +5,8 @@
 #include <allegro5/allegro5.h>
 #include <memory>
 
-struct BitmapDeleter {
+struct BitmapDeleter
+{
     void operator()(ALLEGRO_BITMAP* bmp) const
     {
         if (bmp) {

@@ -23,7 +23,8 @@ public:
     void Init(std::shared_ptr<Image> img);
     void Draw();
     void RunStep();
-    std::unique_ptr<Image> filterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
+    std::unique_ptr<Image> FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
+    void DrawSegmentLines();
     std::vector<Mask> masks;
 private:
     std::shared_ptr<Image> orygImage;

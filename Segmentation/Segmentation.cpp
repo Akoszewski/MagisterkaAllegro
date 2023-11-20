@@ -67,7 +67,7 @@ bool Segmentation::areColorsEqual(ALLEGRO_COLOR color1, ALLEGRO_COLOR color2)
     return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
 }
 
-std::unique_ptr<Image> Segmentation::filterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType)
+std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType)
 {
     std::unique_ptr<Image> image = std::make_unique<Image>(orygImage);
 
@@ -124,8 +124,8 @@ std::unique_ptr<Image> Segmentation::filterImage(const Image& orygImage, int win
 void Segmentation::RunStep()
 {
     if (step == 0) {
-    // std::unique_ptr<Image>(filteredImage) = filterImage(*orygImage.get(), 5, 5, FilterType::Median);
-    orygImage = filterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    // std::unique_ptr<Image>(filteredImage) = FilterImage(*orygImage.get(), 5, 5, FilterType::Median);
+    orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
     } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)
         {
@@ -166,9 +166,18 @@ void Segmentation::RunStep()
     step++;
 }
 
+ void Segmentation::DrawSegmentLines()
+ {
+    for (int i = 1; i < masks.size(); i++)
+    {
+        al_draw_line(masks[i].x, masks[i].y, masks[i].x + masks[i].width, masks[i].y, al_map_rgb(0, 0, 0), 2.0f);
+    }
+ }
+
 void Segmentation::Draw()
 {
     orygImage->Draw();
+    DrawSegmentLines();
     for (auto &mask : masks)
     {
         mask.Draw();

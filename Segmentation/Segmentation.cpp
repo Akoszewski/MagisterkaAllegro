@@ -213,7 +213,12 @@ void Segmentation::RunStep()
 
 void Segmentation::Draw()
 {
-    orygImage->Draw();
+    if (step == 1) {
+        filteredImage->Draw();
+    } else {
+        orygImage->Draw();
+    }
+
     DrawSegmentLines();
     for (auto &mask : masks)
     {

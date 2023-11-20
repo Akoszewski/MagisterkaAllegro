@@ -27,6 +27,7 @@ public:
     std::vector<Mask> masks;
 private:
     std::shared_ptr<Image> orygImage;
+    std::unique_ptr<Image> filteredImage;
     std::vector<Image> layerVisualizations;
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
     int step;

@@ -182,14 +182,14 @@ void Segmentation::PerformMorphOnMask(const Mask& mask, ALLEGRO_COLOR chosenLaye
 void Segmentation::RunStep()
 {
     if (step == 0) {
-    // std::unique_ptr<Image>(filteredImage) = FilterImage(*orygImage.get(), 5, 5, FilterType::Median);
-    orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    filteredImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    // orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
     } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)
         {
             al_set_target_bitmap(masks[i].bmp.get());
             al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-            strategies[i]->RunStep(*orygImage.get(), masks[i]);
+            strategies[i]->RunStep(*filteredImage.get(), masks[i]);
             DrawMaskVisualizations(masks[i], i);
         }
     } else {

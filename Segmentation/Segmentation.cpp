@@ -161,6 +161,22 @@ void Segmentation::DrawMaskVisualizations(const Mask& mask, int i)
     al_set_target_backbuffer(al_get_current_display());
 }
 
+void Segmentation::PerformMorphOnMask(const Mask& mask, ALLEGRO_COLOR chosenLayerColor)
+{
+    for (int y = 0; y < mask.height; y++)
+    {
+        for (int x = 0; x < mask.width; x++)
+        {
+            ALLEGRO_COLOR readMaskColor = al_get_pixel(mask.bmp.get(), x, y);
+            if (areColorsEqual(readMaskColor, chosenLayerColor)) {
+                ALLEGRO_COLOR readOrygImageColor = al_get_pixel(orygImage->bmp.get(),
+                        x + mask.x - orygImage->x, y + mask.y - orygImage->y);
+                
+                al_put_pixel(x, y, readOrygImageColor);
+            }
+        }
+    }
+}
 
 // Trzy etapy: filtracja, segmentacja i operacje morfologiczne
 void Segmentation::RunStep()
@@ -177,9 +193,11 @@ void Segmentation::RunStep()
             DrawMaskVisualizations(masks[i], i);
         }
     } else {
+        // Morphological operations ?
         for (int i = 0; i < masks.size(); i++)
         {
-            // ALLEGRO_COLOR chosenLayerColor = chooseLayerForMorphoology(masks[i]);
+            ALLEGRO_COLOR chosenLayerColor = chooseLayerForMorphoology(masks[i]);
+            PerformMorphOnMask(masks[i], chosenLayerColor);
         }
     }
     step++;

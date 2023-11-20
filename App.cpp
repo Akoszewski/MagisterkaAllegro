@@ -24,6 +24,7 @@ App::App(int size_x, int size_y)
     // image = std::make_shared<Image>("pictures/median.png");
     // image = std::make_shared<Image>("pictures/meanImage.png");
     image->Center();
+    image->y = 30;
     segmentation.Init(image);
 }
 

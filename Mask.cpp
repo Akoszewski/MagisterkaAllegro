@@ -1,5 +1,24 @@
 #include "Mask.h"
 
+void draw_black_outline(ALLEGRO_BITMAP* bitmap, int outline_thickness)
+{
+    // Get the dimensions of the bitmap
+    int width = al_get_bitmap_width(bitmap);
+    int height = al_get_bitmap_height(bitmap);
+
+    // Set the target bitmap
+    al_set_target_bitmap(bitmap);
+
+    // Set the color for drawing (black)
+    ALLEGRO_COLOR black = al_map_rgb(0, 0, 0);
+
+    // Draw the rectangle
+    // Note: We subtract 1 from the width and height to stay within the bitmap's boundary
+    al_draw_rectangle(outline_thickness / 2.0, outline_thickness / 2.0,
+                      width - outline_thickness / 2.0, height - outline_thickness / 2.0, 
+                      black, outline_thickness);
+}
+
 Mask::Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
   : maskTransparency(0)
 {    
@@ -41,5 +60,6 @@ void Mask::initMask(const Image& orygImage, byte xStartPercent, byte xEndPercent
 
     al_set_target_bitmap(bmp.get());
     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+    //draw_black_outline(bmp.get(), 2);
     al_set_target_backbuffer(al_get_current_display());
 }

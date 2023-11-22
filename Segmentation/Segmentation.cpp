@@ -20,11 +20,12 @@ void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
 
-    int percentageInterval = 20;
+    int percentageInterval = 25;
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        strategies.push_back(std::make_unique<KMeans>(3));
+        int k = i < 2 ? 3 : 2;
+        strategies.push_back(std::make_unique<KMeans>(k));
     }
 
     // masks.emplace_back(*orygImage.get(), 0, 100, 0, 20);

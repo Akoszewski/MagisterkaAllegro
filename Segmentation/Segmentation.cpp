@@ -19,13 +19,19 @@ Segmentation::Segmentation()
 void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
+    
+    // int percentageInterval = 10;
+    // for (int i = 0; i < 100; i += percentageInterval)
+    // {
+    //     masks.emplace_back(*orygImage.get(), i, i+percentageInterval, 0, 100);
+    //     strategies.push_back(std::make_unique<KMeans>(4));
+    // }
 
-    int percentageInterval = 25;
+    int percentageInterval = 100;
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        int k = i < 2 ? 3 : 2;
-        strategies.push_back(std::make_unique<KMeans>(k));
+        strategies.push_back(std::make_unique<KMeans>(4));
     }
 
     // masks.emplace_back(*orygImage.get(), 0, 100, 0, 20);
@@ -247,7 +253,7 @@ void Segmentation::PerformMorphOnMask(const Mask& mask, int chosenLayerColorIdx)
 void Segmentation::RunStep()
 {
     if (step == 0) {
-    filteredImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Median);
     // orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
     } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)

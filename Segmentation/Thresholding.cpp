@@ -31,14 +31,6 @@ int calculateOtsu()
     return 0;
 }
 
-static bool areColorsEqual(const ALLEGRO_COLOR &color1, const ALLEGRO_COLOR &color2)
-{
-    return color1.r == color2.r &&
-           color1.g == color2.g &&
-           color1.b == color2.b &&
-           color1.a == color2.a;
-}
-
 int Thresholding::getClusterFromColor(ALLEGRO_COLOR color)
 {
 //     for (int i = 0; i < K; i++)

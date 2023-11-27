@@ -1,6 +1,7 @@
 #include "Segmentation.h"
 #include "Utils.h"
 #include "Filtering.h"
+#include "MorphOperations.h"
 
 #include <algorithm>
 #include <numeric>
@@ -74,19 +75,9 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     }
 }
 
-double gaussian(int x, int y, double sigma)
-{
-    return exp(-(x*x + y*y) / (2 * sigma * sigma)) / (2 * M_PI * sigma * sigma);
-}
-
 int Segmentation::chooseLayerForMorphoology(const Mask& mask)
 {
     return 1;
-}
-
-bool Segmentation::areColorsEqual(ALLEGRO_COLOR color1, ALLEGRO_COLOR color2)
-{
-    return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
 }
 
 std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType)
@@ -173,72 +164,6 @@ std::vector<std::vector<int>> squareStructuringElement(int size)
     // std::vector<std::vector<int>> structuringElement(size, std::vector<int>(size, 1));
     std::vector<std::vector<int>> structuringElement = {{1, 1}};
     return structuringElement;
-}
-
-void Segmentation::ErodeMask(const Mask& mask, std::vector<std::vector<int>> structuringElement, int chosenLayerColorIdx)
-{
-    ALLEGRO_COLOR chosenLayerColor = mask.maskColors[chosenLayerColorIdx];
-    for (int y = 0; y < mask.height; y++)
-    {
-        for (int x = 0; x < mask.width; x++)
-        {
-            ALLEGRO_COLOR readMaskColor = al_get_pixel(mask.bmp.get(), x, y);
-            if (areColorsEqual(readMaskColor, chosenLayerColor)) {
-                bool erodePixel = false;
-                for (int i = 0; i < structuringElement.size(); i++)
-                {
-                    for (int j = 0; j < structuringElement[i].size(); j++)
-                    {
-                        int nx = x + i - structuringElement.size() / 2;
-                        int ny = y + j - structuringElement[i].size() / 2;
-                        if (nx >= 0 && nx < mask.width && ny >= 0 && ny < mask.height) {
-                            ALLEGRO_COLOR maskPixel = al_get_pixel(mask.bmp.get(), nx, ny);
-
-                            if (structuringElement[i][j] == 1 && !areColorsEqual(maskPixel, chosenLayerColor)) {
-                                erodePixel = true;
-                            }
-                        }
-                    }
-                }
-                if (erodePixel) {
-                    al_put_pixel(x, y, mask.maskColors[chosenLayerColorIdx+1]);
-                }
-            }
-        }
-    }
-}
-
-void Segmentation::DilateMask(const Mask& mask, std::vector<std::vector<int>> structuringElement, int chosenLayerColorIdx)
-{
-    ALLEGRO_COLOR chosenLayerColor = mask.maskColors[chosenLayerColorIdx];
-    for (int y = 0; y < mask.height; y++)
-    {
-        for (int x = 0; x < mask.width; x++)
-        {
-            ALLEGRO_COLOR readMaskColor = al_get_pixel(mask.bmp.get(), x, y);
-            if (areColorsEqual(readMaskColor, chosenLayerColor)) {
-                bool dilatePixel = false;
-                for (int i = 0; i < structuringElement.size(); i++)
-                {
-                    for (int j = 0; j < structuringElement[i].size(); j++)
-                    {
-                        int nx = x + i - structuringElement.size() / 2;
-                        int ny = y + j - structuringElement[i].size() / 2;
-                        if (nx >= 0 && nx < mask.width && ny >= 0 && ny < mask.height) {
-                            ALLEGRO_COLOR maskPixel = al_get_pixel(mask.bmp.get(), nx, ny);
-
-                            if (structuringElement[i][j] == 1 && areColorsEqual(maskPixel, chosenLayerColor)) {
-                                dilatePixel = true;
-                            }
-                        }
-                    }
-                }
-                if (!dilatePixel) {
-                    al_put_pixel(x, y, mask.maskColors[chosenLayerColorIdx+1]);
-                }
-            }
-        }
-    }
 }
 
 // TODO: doesn't work well

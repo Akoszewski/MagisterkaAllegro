@@ -7,5 +7,6 @@
 typedef unsigned char byte;
 
 int getGray(ALLEGRO_COLOR color);
+bool areColorsEqual(const ALLEGRO_COLOR &color1, const ALLEGRO_COLOR &color2);
 
 #endif

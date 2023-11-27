@@ -131,16 +131,7 @@ std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int win
                 finalColor = al_map_rgb(median, median, median);
             } else if (filterType == FilterType::Gaussian) {
                 auto kernel = generateGaussianKernel(windowWidth, windowHeight, 0.4 * windowWidth, 0.4 * windowHeight);
-                float filteredValue = 0.0f;
-                int index = 0;
-
-                for (int fx = 0; fx < windowWidth; fx++) {
-                    for (int fy = 0; fy < windowHeight; fy++) {
-                        if (x + fx - edge_x < image->width && y + fy - edge_y < image->height) {
-                            filteredValue += window[index++] * kernel[fx][fy];
-                        }
-                    }
-                }
+                float filteredValue = std::inner_product(window.begin(), window.end(), kernel.begin(), 0.0f);
                 finalColor = al_map_rgb(filteredValue, filteredValue, filteredValue);
             }
             al_put_pixel(x, y, finalColor);

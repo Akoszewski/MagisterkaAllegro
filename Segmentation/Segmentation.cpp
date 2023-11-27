@@ -21,7 +21,8 @@ Segmentation::Segmentation()
 void Segmentation::Init(std::shared_ptr<Image> img)
 {
     orygImage = img;
-    
+    filteredImage = std::make_unique<Image>(*orygImage);
+
     // int percentageInterval = 10;
     // for (int i = 0; i < 100; i += percentageInterval)
     // {
@@ -170,11 +171,11 @@ void Segmentation::PerformMorphOnMask(Mask& mask, int chosenLayerColorIdx)
 }
 
 // Trzy etapy: filtracja, segmentacja i operacje morfologiczne
-void Segmentation::RunStep()
+void Segmentation::RunStep(StepOperation operation)
 {
-    if (step == 0) {
-    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Median);
-    } else if (step < 20) {
+    if (operation == StepOperation::Filter) {
+    filteredImage = FilterImage(*filteredImage.get(), 9, 5, FilterType::Median);
+    } else if (operation == StepOperation::Segmentate) {
         for (int i = 0; i < masks.size(); i++)
         {
             al_set_target_bitmap(masks[i].bmp.get());
@@ -182,7 +183,7 @@ void Segmentation::RunStep()
             strategies[i]->RunStep(*filteredImage.get(), masks[i]);
             DrawMaskVisualizations(masks[i], i);
         }
-    } else {
+    } else if (operation == StepOperation::Dilate) {
         // Morphological operations ?
         for (int i = 0; i < masks.size(); i++)
         {
@@ -206,7 +207,7 @@ void Segmentation::RunStep()
 
 void Segmentation::Draw()
 {
-    if (step == 1 && filteredImage) {
+    if (displayOptions.displayFiltered && filteredImage) {
         filteredImage->Draw();
     } else {
         orygImage->Draw();

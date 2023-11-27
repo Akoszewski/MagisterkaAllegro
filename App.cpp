@@ -22,11 +22,11 @@ App::App(int size_x, int size_y)
 
     // image = std::make_shared<Image>("pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg");
     image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
-    // image = std::make_shared<Image>("pictures/median.png");
-    // image = std::make_shared<Image>("pictures/meanImage.png");
     image->Center();
     image->y = 30;
     segmentation.Init(image);
+
+    printf("Usage: Z - Filter X - Segmentation C - Dilate V - toggle display filtered/oryginal\n");
 }
 
 void App::Run()
@@ -59,8 +59,17 @@ void App::Run()
                 case ALLEGRO_KEY_F:
                     al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));
                     break;
-                case ALLEGRO_KEY_N:
-                    segmentation.RunStep();
+                case ALLEGRO_KEY_Z:
+                    segmentation.RunStep(StepOperation::Filter);
+                    break;
+                case ALLEGRO_KEY_X:
+                    segmentation.RunStep(StepOperation::Segmentate);
+                    break;
+                case ALLEGRO_KEY_C:
+                    segmentation.RunStep(StepOperation::Dilate);
+                    break;
+                case ALLEGRO_KEY_V:
+                    segmentation.displayOptions.displayFiltered = segmentation.displayOptions.displayFiltered ? false : true;
                     break;
             }
         }

@@ -23,7 +23,7 @@ public:
     std::unique_ptr<Image> FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
     void DrawSegmentLines();
     void DrawMaskVisualizations(const Mask& mask, int i);
-    void PerformMorphOnMask(const Mask& mask, int chosenLayerColor);
+    void PerformMorphOnMask(Mask& mask, int chosenLayerColor);
     std::vector<Mask> masks;
 private:
     std::shared_ptr<Image> orygImage;

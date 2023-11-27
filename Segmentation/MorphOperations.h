@@ -4,7 +4,7 @@
 #include "Mask.h"
 #include "Utils.h"
 
-void ErodeMask(const Mask& mask, std::vector<std::vector<int>> structuringElement, int chosenLayerColorIdx);
-void DilateMask(const Mask& mask, std::vector<std::vector<int>> structuringElement, int chosenLayerColorIdx);
+void ErodeMask(Mask& mask, const std::vector<std::vector<int>>& structuringElement, int chosenLayerColorIdx, int fillLayerColorIdx = -1);
+void DilateMask(Mask& mask, const std::vector<std::vector<int>>& structuringElement, int chosenLayerColorIdx, int fillLayerColorIdx = -1);
 
 #endif

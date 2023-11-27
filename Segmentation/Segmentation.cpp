@@ -166,20 +166,20 @@ std::vector<std::vector<int>> squareStructuringElement(int size)
     return structuringElement;
 }
 
-// TODO: doesn't work well
-void Segmentation::PerformMorphOnMask(const Mask& mask, int chosenLayerColorIdx)
+void Segmentation::PerformMorphOnMask(Mask& mask, int chosenLayerColorIdx)
 {
     ALLEGRO_COLOR chosenLayerColor = mask.maskColors[chosenLayerColorIdx];
-    DilateMask(mask, squareStructuringElement(2), chosenLayerColorIdx);
-    ErodeMask(mask, squareStructuringElement(2), chosenLayerColorIdx);
+    // std::vector<std::vector<int>> structuringElement = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+    std::vector<std::vector<int>> structuringElement = {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}};
+    DilateMask(mask, structuringElement, chosenLayerColorIdx);
+    // ErodeMask(mask, structuringElement, chosenLayerColorIdx, 2);
 }
 
 // Trzy etapy: filtracja, segmentacja i operacje morfologiczne
 void Segmentation::RunStep()
 {
     if (step == 0) {
-    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Gaussian);
-    // orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
+    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Median);
     } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)
         {
@@ -190,14 +190,14 @@ void Segmentation::RunStep()
         }
     } else {
         // Morphological operations ?
-        // for (int i = 0; i < masks.size(); i++)
-        // {
-        //     int chosenLayerColorIdx = chooseLayerForMorphoology(masks[i]);
-        //     al_set_target_bitmap(masks[i].bmp.get());
-        //     PerformMorphOnMask(masks[i], chosenLayerColorIdx);
-        //     DrawMaskVisualizations(masks[i], i);
-        //     al_set_target_backbuffer(al_get_current_display());
-        // }
+        for (int i = 0; i < masks.size(); i++)
+        {
+            int chosenLayerColorIdx = chooseLayerForMorphoology(masks[i]);
+            al_set_target_bitmap(masks[i].bmp.get());
+            PerformMorphOnMask(masks[i], chosenLayerColorIdx);
+            DrawMaskVisualizations(masks[i], i);
+            al_set_target_backbuffer(al_get_current_display());
+        }
     }
     step++;
 }

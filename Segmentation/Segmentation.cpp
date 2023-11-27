@@ -1,5 +1,6 @@
 #include "Segmentation.h"
 #include "Utils.h"
+#include "Filtering.h"
 
 #include <algorithm>
 #include <numeric>
@@ -129,7 +130,18 @@ std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int win
                 int median = window[windowWidth * windowHeight / 2];
                 finalColor = al_map_rgb(median, median, median);
             } else if (filterType == FilterType::Gaussian) {
-                // TODO: Add code here
+                auto kernel = generateGaussianKernel(windowWidth, windowHeight, 0.4 * windowWidth, 0.4 * windowHeight);
+                float filteredValue = 0.0f;
+                int index = 0;
+
+                for (int fx = 0; fx < windowWidth; fx++) {
+                    for (int fy = 0; fy < windowHeight; fy++) {
+                        if (x + fx - edge_x < image->width && y + fy - edge_y < image->height) {
+                            filteredValue += window[index++] * kernel[fx][fy];
+                        }
+                    }
+                }
+                finalColor = al_map_rgb(filteredValue, filteredValue, filteredValue);
             }
             al_put_pixel(x, y, finalColor);
         }
@@ -253,7 +265,7 @@ void Segmentation::PerformMorphOnMask(const Mask& mask, int chosenLayerColorIdx)
 void Segmentation::RunStep()
 {
     if (step == 0) {
-    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Median);
+    filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Gaussian);
     // orygImage = FilterImage(*orygImage.get(), 7, 5, FilterType::Median);
     } else if (step < 12) {
         for (int i = 0; i < masks.size(); i++)
@@ -287,7 +299,7 @@ void Segmentation::RunStep()
 
 void Segmentation::Draw()
 {
-    if (step == 1) {
+    if (step == 1 && filteredImage) {
         filteredImage->Draw();
     } else {
         orygImage->Draw();

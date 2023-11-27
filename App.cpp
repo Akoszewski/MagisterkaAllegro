@@ -20,7 +20,7 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    // image = std::make_shared<Image>("pictures/cropped_images/gaussian.png");
+    // image = std::make_shared<Image>("pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg");
     image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
     // image = std::make_shared<Image>("pictures/median.png");
     // image = std::make_shared<Image>("pictures/meanImage.png");

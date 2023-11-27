@@ -159,18 +159,12 @@ void Segmentation::DrawMaskVisualizations(const Mask& mask, int i)
     al_set_target_backbuffer(al_get_current_display());
 }
 
-std::vector<std::vector<int>> squareStructuringElement(int size)
-{
-    // std::vector<std::vector<int>> structuringElement(size, std::vector<int>(size, 1));
-    std::vector<std::vector<int>> structuringElement = {{1, 1}};
-    return structuringElement;
-}
 
 void Segmentation::PerformMorphOnMask(Mask& mask, int chosenLayerColorIdx)
 {
     ALLEGRO_COLOR chosenLayerColor = mask.maskColors[chosenLayerColorIdx];
-    // std::vector<std::vector<int>> structuringElement = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
-    std::vector<std::vector<int>> structuringElement = {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}};
+    std::vector<std::vector<int>> structuringElement = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+    // std::vector<std::vector<int>> structuringElement = {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}};
     DilateMask(mask, structuringElement, chosenLayerColorIdx);
     // ErodeMask(mask, structuringElement, chosenLayerColorIdx, 2);
 }
@@ -180,7 +174,7 @@ void Segmentation::RunStep()
 {
     if (step == 0) {
     filteredImage = FilterImage(*orygImage.get(), 9, 5, FilterType::Median);
-    } else if (step < 12) {
+    } else if (step < 20) {
         for (int i = 0; i < masks.size(); i++)
         {
             al_set_target_bitmap(masks[i].bmp.get());

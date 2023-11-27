@@ -22,19 +22,31 @@ void draw_black_outline(ALLEGRO_BITMAP* bitmap, int outline_thickness)
 Mask::Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent)
   : maskTransparency(0)
 {    
+    // maskColors =
+    // {
+    //     al_map_rgba(100, 0, 0, maskTransparency),
+    //     al_map_rgba(0, 100, 0, maskTransparency),
+    //     al_map_rgba(0, 0, 100, maskTransparency),
+    //     al_map_rgba(255, 0, 0, maskTransparency),
+    //     al_map_rgba(0, 255, 0, maskTransparency),
+    //     al_map_rgba(0, 0, 255, maskTransparency),
+    //     al_map_rgba(100, 100, 0, maskTransparency),
+    //     al_map_rgba(0, 100, 100, maskTransparency),
+    //     al_map_rgba(255, 255, 0, maskTransparency),
+    //     al_map_rgba(0, 255, 255, maskTransparency),
+    // };
     maskColors =
     {
-        al_map_rgba(100, 0, 0, maskTransparency),
-        al_map_rgba(0, 100, 0, maskTransparency),
-        al_map_rgba(0, 0, 100, maskTransparency),
-        al_map_rgba(255, 0, 0, maskTransparency),
-        al_map_rgba(0, 255, 0, maskTransparency),
-        al_map_rgba(0, 0, 255, maskTransparency),
-        al_map_rgba(100, 100, 0, maskTransparency),
-        al_map_rgba(0, 100, 100, maskTransparency),
-        al_map_rgba(255, 255, 0, maskTransparency),
-        al_map_rgba(0, 255, 255, maskTransparency),
+        al_map_rgba(0, 0, 0, maskTransparency),             // Black
+        al_map_rgba(0, 100, 0, maskTransparency),           // Green
+        al_map_rgba(100, 50, 0, maskTransparency),          // Orange
+        al_map_rgba(0, 0, 100, maskTransparency),           // Blue
+        al_map_rgba(0, 0, 255, maskTransparency),           // Blue
+        al_map_rgba(127, 0, 255, maskTransparency),         // Purple
+        al_map_rgba(255, 0, 255, maskTransparency),         // Magenta
+        al_map_rgba(255, 0, 127, maskTransparency),         // Rose
     };
+
     initMask(orygImage, xStartPercent, xEndPercent, yStartPercent, yEndPercent);
 }
 

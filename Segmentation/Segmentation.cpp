@@ -102,21 +102,18 @@ std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int win
     int edge_y = windowHeight / 2;
 
     std::vector<int> window(windowWidth * windowHeight);
-    for (int x = edge_x; x < image->width - edge_x; x++)
+    for (int x = 0; x < image->width; x++)
     {
-        for (int y = edge_y; y < image->height - edge_y; y++)
+        for (int y = 0; y < image->height; y++)
         {
             int i = 0;
             for (int fx = 0; fx < windowWidth; fx++)
             {
                 for (int fy = 0; fy < windowHeight; fy++)
                 {
-                    if (x + fx - edge_x < image->width && y + fy - edge_y < image->height) {
-                        window[i++] = getGray(al_get_pixel(orygImage.bmp.get(), x + fx - edge_x, y + fy - edge_y));
-                    }
-                    else {
-                        printf("Attempting to go out of bounds\n");
-                    }
+                    int clampedX = std::clamp(x + fx - edge_x, 0, image->width - 1);
+                    int clampedY = std::clamp(y + fy - edge_y, 0, image->height - 1);
+                    window[i++] = getGray(al_get_pixel(orygImage.bmp.get(), clampedX, clampedY));
                 }
             }
 

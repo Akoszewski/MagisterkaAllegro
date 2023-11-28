@@ -1,9 +1,14 @@
 #include "KMeans.h"
 
-KMeans::KMeans(int K)
-  : K(K)
+KMeans::KMeans(int K, const std::vector<int>& initialCentroids)
+  : K(K), centroids(initialCentroids)
 {
-
+    if (initialCentroids.empty()) {
+        for (int i = 0; i < K; i++)
+        {
+            centroids.push_back(i * 255/K);
+        }
+    }
 }
 
 KMeans::~KMeans(){}
@@ -11,7 +16,6 @@ KMeans::~KMeans(){}
 void KMeans::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
 {
     this->maskColors = maskColors;
-    clusterMeans.insert(clusterMeans.end(), K, 0);
 }
 
 int getMostSimilarCentroidIdx(const std::vector<int>& centroids, int pxColorGray)
@@ -41,17 +45,6 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
 
 void KMeans::RunStep(const Image& orygImage, const Mask& mask)
 {
-    // Set centroids
-    std::vector<int> centroids;
-    for (int i = 0; i < K; i++)
-    {
-        if (step > 0) {
-            centroids.push_back(clusterMeans[i]);
-        } else {
-            centroids.push_back(i * 255/K);
-        }
-    }
-
     for (int y = 0; y < mask.height; y++)
     {
         for (int x = 0; x < mask.width; x++)
@@ -89,13 +82,12 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
     for (int i = 0; i < K; i++)
     {
         if (clusterCounts[i] != 0) {
-            clusterMeans[i] = clusterSums[i] / clusterCounts[i];
+            centroids[i] = clusterSums[i] / clusterCounts[i];
         }
     }
 
     al_set_target_backbuffer(al_get_current_display());
 
-    // printf("Cluster means: %d %d %d %d %d\n", clusterMeans[0], clusterMeans[1], clusterMeans[2], clusterMeans[3], clusterMeans[4]);
-
+    printf("Step: %d Centroids: %d %d %d %d %d\n", step, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
     step++;
 }

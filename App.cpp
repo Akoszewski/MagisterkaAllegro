@@ -20,13 +20,13 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    // image = std::make_shared<Image>("pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg");
-    image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
+    image = std::make_shared<Image>("pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg");
+    // image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
     image->Center();
     image->y = 30;
     segmentation.Init(image);
 
-    printf("Usage: Z - Filter X - Segmentation C - Dilate V - toggle display filtered/oryginal\n");
+    printf("Usage:\nZ - Filter\nX - Segmentation\nC - Dilate\nV - toggle display filtered/oryginal\n");
 }
 
 void App::Run()

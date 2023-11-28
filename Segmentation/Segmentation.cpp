@@ -27,14 +27,14 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     // for (int i = 0; i < 100; i += percentageInterval)
     // {
     //     masks.emplace_back(*orygImage.get(), i, i+percentageInterval, 0, 100);
-    //     strategies.push_back(std::make_unique<KMeans>(4));
+    //     strategies.push_back(std::make_unique<KMeansWrap>(3));
     // }
 
     int percentageInterval = 100;
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        strategies.push_back(std::make_unique<KMeans>(4));
+        strategies.push_back(std::make_unique<KMeansWrap>(4));
     }
 
     // masks.emplace_back(*orygImage.get(), 0, 100, 0, 20);

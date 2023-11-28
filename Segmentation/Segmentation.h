@@ -3,6 +3,7 @@
 
 #include "KMeans.h"
 #include "Thresholding.h"
+#include "KMeansWrap.h"
 #include "../Mask.h"
 #include "DisplayOptions.h"
 

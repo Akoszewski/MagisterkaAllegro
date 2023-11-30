@@ -3,10 +3,17 @@
 
 #include "SegmentationStrategy.h"
 
+enum class CentroidType
+{
+    Random,
+    Equalized,
+    Custom
+};
+
 class KMeans : public SegmentationStrategy
 {
 public:
-    KMeans(int K, const std::vector<int>& initialCentroids = {});
+    KMeans(int K, CentroidType centroidType = CentroidType::Equalized, const std::vector<int>& initialCentroids = {});
     ~KMeans();
     void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
@@ -16,6 +23,8 @@ private:
     std::vector<int> centroids;
 
     int getClusterFromColor(ALLEGRO_COLOR color);
+    std::vector<int> getRandomCentroids() const;
+    std::vector<int> getEqualizedCentroids() const;
 };
 
 #endif

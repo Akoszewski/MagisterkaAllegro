@@ -1,13 +1,26 @@
 #include "KMeans.h"
 
-KMeans::KMeans(int K, const std::vector<int>& initialCentroids)
-  : K(K), centroids(initialCentroids)
+#include <random>
+#include <stdexcept>
+
+KMeans::KMeans(int K, CentroidType centroidType, const std::vector<int>& initialCentroids)
+  : K(K)
 {
-    if (initialCentroids.empty()) {
-        for (int i = 0; i < K; i++)
-        {
-            centroids.push_back(i * 255/K);
-        }
+    switch (centroidType)
+    {
+        case CentroidType::Random:
+            centroids = getRandomCentroids();
+            break;
+        case CentroidType::Equalized:
+            centroids = getEqualizedCentroids();
+            break;
+        case CentroidType::Custom:
+            if (initialCentroids.size() != K) {
+                throw std::invalid_argument("Error: Initial centroids size is not equal to K!");
+            } else {
+                centroids = initialCentroids;
+            }
+            break;
     }
 }
 
@@ -41,6 +54,31 @@ int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
         }
     }
     return -1;
+}
+
+std::vector<int> KMeans::getRandomCentroids() const
+{
+    std::vector<int> initialCentroids;
+    std::random_device randomGeneratorDevice;
+    std::mt19937 generator(randomGeneratorDevice());
+    std::uniform_int_distribution<int> distribution(0, 255);
+
+    for (int i = 0; i < K; i++)
+    {
+        initialCentroids.push_back(distribution(generator));
+    }
+
+    return initialCentroids;
+}
+
+std::vector<int> KMeans::getEqualizedCentroids() const
+{
+    std::vector<int> initialCentroids;
+    for (int i = 0; i < K; i++)
+    {
+        initialCentroids.push_back(i * 255/K);
+    }
+    return initialCentroids;
 }
 
 void KMeans::RunStep(const Image& orygImage, const Mask& mask)

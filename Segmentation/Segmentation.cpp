@@ -34,7 +34,7 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        strategies.push_back(std::make_unique<KMeansWrap>(4));
+        strategies.push_back(std::make_unique<KMeansWrap>(4, CentroidType::Random));
     }
 
     // masks.emplace_back(*orygImage.get(), 0, 100, 0, 20);

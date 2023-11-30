@@ -86,8 +86,6 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
         }
     }
 
-    al_set_target_backbuffer(al_get_current_display());
-
     printf("Step: %d Centroids: %d %d %d %d %d\n", step, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
     step++;
 }

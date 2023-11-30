@@ -88,6 +88,5 @@ void Thresholding::RunStep(const Image& orygImage, const Mask& mask)
     printf("varianceBetween: %lld\n", varianceBetween);
     printf("step: %d\n\n", step);
 
-    al_set_target_backbuffer(al_get_current_display());
     step++;
 }

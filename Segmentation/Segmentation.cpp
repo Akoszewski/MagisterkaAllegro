@@ -182,6 +182,7 @@ void Segmentation::RunStep(StepOperation operation)
             al_clear_to_color(al_map_rgba(0, 0, 0, 0));
             strategies[i]->RunStep(*filteredImage.get(), masks[i]);
             DrawMaskVisualizations(masks[i], i);
+            al_set_target_backbuffer(al_get_current_display());
         }
     } else if (operation == StepOperation::Dilate) {
         // Morphological operations ?

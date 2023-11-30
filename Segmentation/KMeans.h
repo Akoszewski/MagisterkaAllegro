@@ -21,6 +21,7 @@ private:
     int K;
     std::vector<ALLEGRO_COLOR> maskColors;
     std::vector<int> centroids;
+    std::vector<int> previousCentroids;
 
     int getClusterFromColor(ALLEGRO_COLOR color);
     std::vector<int> getRandomCentroids() const;

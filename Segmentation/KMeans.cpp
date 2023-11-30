@@ -125,5 +125,12 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
     }
 
     printf("Step: %d Centroids: %d %d %d %d %d\n", step, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
+
+    if (centroids == previousCentroids) {
+        printf("Segmentation finished\n");
+        segmentationFinished = true;
+    }
+
+    previousCentroids = centroids;
     step++;
 }

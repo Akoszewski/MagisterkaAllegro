@@ -20,7 +20,7 @@ void KMeansWrap::RunStep(const Image& orygImage, const Mask& mask)
 {
     KMeans kmeans(K, centroidType, initialCentroids);
     kmeans.Init(maskColors);
-    for (int i = 0; i < 10; i++)
+    while (!kmeans.segmentationFinished)
     {
         kmeans.RunStep(orygImage, mask);
     }

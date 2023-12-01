@@ -83,14 +83,17 @@ std::vector<int> KMeans::getEqualizedCentroids() const
 
 void KMeans::RunStep(const Image& orygImage, const Mask& mask)
 {
+    double totalVariation = 0.0;
+
     for (int y = 0; y < mask.height; y++)
     {
         for (int x = 0; x < mask.width; x++)
         {
             int pxColorGray = getGray(al_get_pixel(orygImage.bmp.get(), x + mask.x - orygImage.x, y + mask.y - orygImage.y));
-            
             int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
             al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
+            double distance = pxColorGray - centroids[mostSimilarCentroidIdx];
+            totalVariation += distance * distance;
         }
     }
 
@@ -124,7 +127,7 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
         }
     }
 
-    printf("Step: %d Centroids: %d %d %d %d %d\n", step, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
+    printf("Step: %d Variation: %f Centroids: %d %d %d %d %d\n", step, totalVariation, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
 
     if (centroids == previousCentroids) {
         printf("Segmentation finished\n");

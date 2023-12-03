@@ -174,6 +174,7 @@ void KMeans3D::RunStep(const Image& orygImage, const Mask& mask)
         segmentationFinished = true;
     }
 
+    lastClusterCount = centroids.size();
     previousCentroids = centroids;
     step++;
 }

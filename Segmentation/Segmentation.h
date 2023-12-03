@@ -27,23 +27,24 @@ enum class StepOperation
 class Segmentation
 {
 public:
-    Segmentation();
+    Segmentation(std::string&& imagePath);
     ~Segmentation();
-    void Init(std::shared_ptr<Image> img);
+    void Init(std::string&& imagePath);
     void Draw();
     void RunStep(StepOperation operation);
     std::unique_ptr<Image> FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
     void DrawSegmentLines();
-    void DrawMaskVisualizations(const Mask& mask, int i, int clusters);
+    void InitLayerVisualizations(int clusters);
+    void DrawLayerVisualizations(const Mask& mask, int i, int clusters);
     void PerformMorphOnMask(Mask& mask, int chosenLayerColor);
     std::vector<Mask> masks;
     DisplayMode displayMode = DisplayMode::Filtered;
     void ToggleImageDisplayMode();
-private:
-    std::shared_ptr<Image> orygImage;
+    std::unique_ptr<Image> orygImage;
     std::unique_ptr<Image> filteredImage;
     std::vector<Image> layerVisualizations;
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
+private:
     int step;
     int chooseLayerForMorphoology(const Mask& mask);
 };

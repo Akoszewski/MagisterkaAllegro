@@ -1,5 +1,7 @@
 #include "App.h"
 
+#include <string>
+
 App::App(int size_x, int size_y)
   : width(size_x), height(size_y), isClosed(false)
 {
@@ -20,13 +22,21 @@ App::App(int size_x, int size_y)
         return;
     }
 
-    // image = std::make_shared<Image>("pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg");
-    image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
-    image->Center();
-    image->y = 30;
+    // std::string imagePath = "pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg";
+    std::string imagePath = "pictures/cropped_images/roiCropped.png";
+    segmentation = std::make_unique<Segmentation>(std::move(imagePath));
+    
+    segmentation->orygImage->Center();
+    segmentation->orygImage->y = 30;
 
-    segmentation = std::make_unique<Segmentation>();
-    segmentation->Init(image);
+    segmentation->filteredImage->Center();
+    segmentation->filteredImage->y = 30;
+
+    for (auto& mask : segmentation->masks)
+    {
+        mask.x += segmentation->orygImage->x;
+        mask.y += segmentation->orygImage->y;
+    }
 
     printf("Usage:\nZ - Filter\nX - Segmentation\nC - Dilate\nV - toggle display filtered/oryginal\n");
 
@@ -60,18 +70,6 @@ void App::Run()
             {  
                 case ALLEGRO_KEY_ESCAPE:
                     isClosed = true;
-                    break;
-                case ALLEGRO_KEY_W:
-                    image->y--;
-                    break;
-                case ALLEGRO_KEY_A:
-                    image->x--;
-                    break;
-                case ALLEGRO_KEY_S:
-                    image->y++;
-                    break;
-                case ALLEGRO_KEY_D:
-                    image->x++;
                     break;
                 case ALLEGRO_KEY_F:
                     al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));

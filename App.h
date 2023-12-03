@@ -25,7 +25,6 @@ private:
     ALLEGRO_DISPLAY* disp;
     ALLEGRO_FONT* font;
     ALLEGRO_EVENT event;
-    std::shared_ptr<Image> image;
     bool isClosed;
     int currentBackgroundColorIdx = 0;
     void toggleBackground();

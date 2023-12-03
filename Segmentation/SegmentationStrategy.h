@@ -30,6 +30,7 @@ public:
     virtual void RunStep(const Image& orygImage, const Mask& mask) = 0;
     virtual ~SegmentationStrategy() {}
     bool segmentationFinished = false;
+    int lastClusterCount = 0;
 protected:
     int step = 0;
 };

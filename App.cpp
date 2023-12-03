@@ -24,7 +24,9 @@ App::App(int size_x, int size_y)
     image = std::make_shared<Image>("pictures/cropped_images/roiCropped.png");
     image->Center();
     image->y = 30;
-    segmentation.Init(image);
+
+    segmentation = std::make_unique<Segmentation>();
+    segmentation->Init(image);
 
     printf("Usage:\nZ - Filter\nX - Segmentation\nC - Dilate\nV - toggle display filtered/oryginal\n");
 
@@ -75,16 +77,16 @@ void App::Run()
                     al_toggle_display_flag(disp, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(disp) & ALLEGRO_FULLSCREEN_WINDOW));
                     break;
                 case ALLEGRO_KEY_Z:
-                    segmentation.RunStep(StepOperation::Filter);
+                    segmentation->RunStep(StepOperation::Filter);
                     break;
                 case ALLEGRO_KEY_X:
-                    segmentation.RunStep(StepOperation::Segmentate);
+                    segmentation->RunStep(StepOperation::Segmentate);
                     break;
                 case ALLEGRO_KEY_C:
-                    segmentation.RunStep(StepOperation::Dilate);
+                    segmentation->RunStep(StepOperation::Dilate);
                     break;
                 case ALLEGRO_KEY_V:
-                    segmentation.ToggleImageDisplayMode();
+                    segmentation->ToggleImageDisplayMode();
                     break;
                 case ALLEGRO_KEY_B:
                     toggleBackground();
@@ -94,8 +96,7 @@ void App::Run()
 
         al_clear_to_color(backgroundColors[currentBackgroundColorIdx]);
 
-        // image->Draw();
-        segmentation.Draw();
+        segmentation->Draw();
         // al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
         
         al_flip_display();

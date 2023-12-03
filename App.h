@@ -19,7 +19,7 @@ public:
     void Run();
     int width;
     int height;
-    Segmentation segmentation;
+    std::unique_ptr<Segmentation> segmentation;
 private:
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_DISPLAY* disp;
@@ -27,9 +27,9 @@ private:
     ALLEGRO_EVENT event;
     std::shared_ptr<Image> image;
     bool isClosed;
-    std::vector<ALLEGRO_COLOR> backgroundColors;
     int currentBackgroundColorIdx = 0;
     void toggleBackground();
+    std::vector<ALLEGRO_COLOR> backgroundColors;
 };
 
 #endif

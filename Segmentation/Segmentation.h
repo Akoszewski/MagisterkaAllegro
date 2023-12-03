@@ -37,7 +37,7 @@ public:
     void DrawMaskVisualizations(const Mask& mask, int i, int clusters);
     void PerformMorphOnMask(Mask& mask, int chosenLayerColor);
     std::vector<Mask> masks;
-    DisplayMode displayMode;
+    DisplayMode displayMode = DisplayMode::Filtered;
     void ToggleImageDisplayMode();
 private:
     std::shared_ptr<Image> orygImage;

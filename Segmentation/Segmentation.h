@@ -34,7 +34,7 @@ public:
     void RunStep(StepOperation operation);
     std::unique_ptr<Image> FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
     void DrawSegmentLines();
-    void DrawMaskVisualizations(const Mask& mask, int i);
+    void DrawMaskVisualizations(const Mask& mask, int i, int clusters);
     void PerformMorphOnMask(Mask& mask, int chosenLayerColor);
     std::vector<Mask> masks;
     DisplayOptions displayOptions;

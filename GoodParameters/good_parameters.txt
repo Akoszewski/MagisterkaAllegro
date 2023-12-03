@@ -1,0 +1,16 @@
+KMeans3D:
+double xModifier = 0.1;
+double yModifier = 1.0;
+double intensityModifier = 1.0;
+filteredImage = FilterImage(*filteredImage.get(), 9, 5, FilterType::Median);
+Centroids: {414 105 106} {390 24 168} {328 65 101} {393 9 42} {363 44 129} {378 84 203} {348 19 133}
+----------------------------------------------------------------
+
+
+KMeans3D:
+double xModifier = 0.1;
+double yModifier = 1.0;
+double intensityModifier = 1.0;
+filteredImage = FilterImage(*filteredImage.get(), 9, 5, FilterType::Median);
+Centroids: {399 24 142} {392 9 43} {340 64 99} {356 46 129} {413 105 107} {185 17 191} {377 84 204}
+----------------------------------------------------------------

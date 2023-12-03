@@ -39,8 +39,8 @@ double KMeans3D::calculateDistance(DataPoint3D point, DataPoint3D centroid) cons
     int normalizedPointYDistance = (point.y - centroid.y) * MAX_NORMALIZED_VALUE / maxDataPoint.y;
     int normalizedPointIntensityDistance = (point.intensity - centroid.intensity) * MAX_NORMALIZED_VALUE / maxDataPoint.intensity;
 
-    double xModifier = 0.1;
-    double yModifier = 1.0;
+    double xModifier = 0.0;
+    double yModifier = 0.3;
     double intensityModifier = 1.0;
 
     return sqrt(
@@ -110,7 +110,7 @@ std::vector<DataPoint3D> KMeans3D::getEqualizedCentroids(DataPoint3D maxValues) 
     std::vector<DataPoint3D> initialCentroids;
     for (int i = 0; i < K; i++)
     {
-        initialCentroids.emplace_back(i * maxValues.x/K, maxValues.x/2, i * maxValues.intensity/K);
+        initialCentroids.emplace_back(maxValues.x/2, i * maxValues.y/K, i * maxValues.intensity/K);
     }
     return initialCentroids;
 }

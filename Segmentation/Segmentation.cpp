@@ -30,11 +30,13 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     //     strategies.push_back(std::make_unique<KMeansWrap>(3));
     // }
 
+    int clusters = 7;
+
     int percentageInterval = 100;
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        strategies.push_back(std::make_unique<KMeans3D>(7, DataPoint3D(orygImage->width, orygImage->height, 255), CentroidType::Random));
+        strategies.push_back(std::make_unique<KMeans3D>(clusters, DataPoint3D(orygImage->width, orygImage->height, 255), CentroidType::Random));
     }
 
     // masks.emplace_back(*orygImage.get(), 0, 100, 0, 20);
@@ -58,20 +60,12 @@ void Segmentation::Init(std::shared_ptr<Image> img)
     for (int i = 0; i < masks.size(); i++)
     {
         strategies[i]->Init(masks[i].maskColors);
-
-        layerVisualizations.emplace_back(masks[0]);
-        layerVisualizations[3*i].y = layer_visualisation_y;
-        layer_visualisation_y += masks[0].height + margin;
-
-        layerVisualizations.emplace_back(masks[0]);
-        layerVisualizations[3*i + 1].y = layer_visualisation_y;
-        layer_visualisation_y += masks[0].height + margin;
-
-
-        layerVisualizations.emplace_back(masks[0]);
-        layerVisualizations[3*i + 2].y = layer_visualisation_y;
-        layer_visualisation_y += masks[0].height + margin;
-
+        for (int j = 0; j < clusters; j++)
+        {
+            layerVisualizations.emplace_back(masks[0]);
+            layerVisualizations[clusters*i + j].y = layer_visualisation_y;
+            layer_visualisation_y += masks[0].height + margin;
+        }
         layer_visualisation_y += margin2;
     }
 }
@@ -133,12 +127,12 @@ std::unique_ptr<Image> Segmentation::FilterImage(const Image& orygImage, int win
     return image;
 }
 
-void Segmentation::DrawMaskVisualizations(const Mask& mask, int i)
+void Segmentation::DrawMaskVisualizations(const Mask& mask, int i, int clusters)
 {
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < clusters; j++)
     {
         ALLEGRO_COLOR chosenLayerColor = mask.maskColors[j];
-        al_set_target_bitmap(layerVisualizations[i*3 + j].bmp.get());
+        al_set_target_bitmap(layerVisualizations[i*clusters + j].bmp.get());
         al_clear_to_color(al_map_rgba(0, 0, 0, 0));
         // al_clear_to_color(al_map_rgb(255, 255, 0));
 
@@ -173,6 +167,7 @@ void Segmentation::PerformMorphOnMask(Mask& mask, int chosenLayerColorIdx)
 // Trzy etapy: filtracja, segmentacja i operacje morfologiczne
 void Segmentation::RunStep(StepOperation operation)
 {
+    int clusters = 7;
     if (operation == StepOperation::Filter) {
     filteredImage = FilterImage(*filteredImage.get(), 9, 5, FilterType::Median);
     } else if (operation == StepOperation::Segmentate) {
@@ -181,7 +176,7 @@ void Segmentation::RunStep(StepOperation operation)
             al_set_target_bitmap(masks[i].bmp.get());
             al_clear_to_color(al_map_rgba(0, 0, 0, 0));
             strategies[i]->RunStep(*filteredImage.get(), masks[i]);
-            DrawMaskVisualizations(masks[i], i);
+            DrawMaskVisualizations(masks[i], i, clusters);
             al_set_target_backbuffer(al_get_current_display());
         }
     } else if (operation == StepOperation::Dilate) {
@@ -191,7 +186,7 @@ void Segmentation::RunStep(StepOperation operation)
             int chosenLayerColorIdx = chooseLayerForMorphoology(masks[i]);
             al_set_target_bitmap(masks[i].bmp.get());
             PerformMorphOnMask(masks[i], chosenLayerColorIdx);
-            DrawMaskVisualizations(masks[i], i);
+            DrawMaskVisualizations(masks[i], i, clusters);
             al_set_target_backbuffer(al_get_current_display());
         }
     }

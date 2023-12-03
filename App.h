@@ -27,6 +27,9 @@ private:
     ALLEGRO_EVENT event;
     std::shared_ptr<Image> image;
     bool isClosed;
+    std::vector<ALLEGRO_COLOR> backgroundColors;
+    int currentBackgroundColorIdx = 0;
+    void toggleBackground();
 };
 
 #endif

@@ -27,6 +27,21 @@ App::App(int size_x, int size_y)
     segmentation.Init(image);
 
     printf("Usage:\nZ - Filter\nX - Segmentation\nC - Dilate\nV - toggle display filtered/oryginal\n");
+
+    backgroundColors =
+    {
+        al_map_rgb(0, 50, 255),          // Blue
+        al_map_rgb(0, 0, 0),             // Black
+    };
+}
+
+void App::toggleBackground()
+{
+    if (currentBackgroundColorIdx < backgroundColors.size() - 1) {
+        currentBackgroundColorIdx++;
+    } else {
+        currentBackgroundColorIdx = 0;
+    }
 }
 
 void App::Run()
@@ -71,10 +86,13 @@ void App::Run()
                 case ALLEGRO_KEY_V:
                     segmentation.ToggleImageDisplayMode();
                     break;
+                case ALLEGRO_KEY_B:
+                    toggleBackground();
+                    break;
             }
         }
 
-        al_clear_to_color(al_map_rgb(0, 50, 255));
+        al_clear_to_color(backgroundColors[currentBackgroundColorIdx]);
 
         // image->Draw();
         segmentation.Draw();

@@ -15,8 +15,8 @@
 // Best threshold: 138
 // Best threshold: 116
 
-Segmentation::Segmentation(std::string&& imagePath)
-  : step(0)
+Segmentation::Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams)
+  : step(0), segmentationParams(std::move(segmentationParams))
 {
     Init(std::move(imagePath));
 }
@@ -37,7 +37,8 @@ void Segmentation::Init(std::string&& imagePath)
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        strategies.push_back(std::make_unique<KMeans3D>(7, DataPoint3D(orygImage->width, orygImage->height, 255), CentroidType::Random));
+        strategies.push_back(std::make_unique<KMeans3D>(9, DataPoint3D(orygImage->width, orygImage->height, 255), DimensionWeights{0.0, 0.2, 1.0}, CentroidType::Random));
+        // strategies.push_back(std::make_unique<KMeansWrap>(4, CentroidType::Random));
     }
 
     for (int i = 0; i < masks.size(); i++)

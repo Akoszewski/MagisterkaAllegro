@@ -1,5 +1,5 @@
 #include "App.h"
-
+#include "Segmentation/SegmentationParams.h"
 #include <string>
 
 App::App(int size_x, int size_y)
@@ -22,9 +22,11 @@ App::App(int size_x, int size_y)
         return;
     }
 
+    SegmentationParams segmentationParams;
+
     // std::string imagePath = "pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg";
     std::string imagePath = "pictures/cropped_images/roiCropped.png";
-    segmentation = std::make_unique<Segmentation>(std::move(imagePath));
+    segmentation = std::make_unique<Segmentation>(std::move(imagePath), std::move(segmentationParams));
     
     segmentation->orygImage->Center();
     segmentation->orygImage->y = 30;

@@ -8,6 +8,7 @@
 #include "../Mask.h"
 #include "DisplayOptions.h"
 #include "SegmentationStrategy.h"
+#include "SegmentationParams.h"
 
 
 enum class FilterType
@@ -27,7 +28,7 @@ enum class StepOperation
 class Segmentation
 {
 public:
-    Segmentation(std::string&& imagePath);
+    Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams);
     ~Segmentation();
     void Init(std::string&& imagePath);
     void Draw();
@@ -46,6 +47,7 @@ public:
     std::vector<std::unique_ptr<SegmentationStrategy>> strategies;
 private:
     int step;
+    SegmentationParams segmentationParams;
     int chooseLayerForMorphoology(const Mask& mask);
 };
 

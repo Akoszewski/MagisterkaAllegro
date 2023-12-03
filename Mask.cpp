@@ -45,6 +45,7 @@ Mask::Mask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yS
         al_map_rgba(50, 0, 100, maskTransparency),          // Purple
         al_map_rgba(100, 0, 100, maskTransparency),         // Magenta
         al_map_rgba(100, 0, 50, maskTransparency),          // Rose
+        al_map_rgba(100, 100, 100, maskTransparency),       // White
     };
 
     initMask(orygImage, xStartPercent, xEndPercent, yStartPercent, yEndPercent);

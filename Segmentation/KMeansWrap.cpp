@@ -25,5 +25,6 @@ void KMeansWrap::RunStep(const Image& orygImage, const Mask& mask)
         kmeans.RunStep(orygImage, mask);
     }
 
+    lastClusterCount = kmeans.lastClusterCount;
     step++;
 }

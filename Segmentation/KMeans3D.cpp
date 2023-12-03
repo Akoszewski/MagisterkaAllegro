@@ -3,10 +3,10 @@
 #include <random>
 #include <stdexcept>
 
-#define MAX_NORMALIZED_VALUE 1000
+constexpr int MAX_NORMALIZED_VALUE = 1000;
 
-KMeans3D::KMeans3D(int K, DataPoint3D maxDataPoint, CentroidType centroidType, const std::vector<DataPoint3D>& initialCentroids)
-  : K(K), maxDataPoint(maxDataPoint)
+KMeans3D::KMeans3D(int K, DataPoint3D maxDataPoint, DimensionWeights dimentionWeights, CentroidType centroidType, const std::vector<DataPoint3D>& initialCentroids)
+  : K(K), maxDataPoint(maxDataPoint), dimensionWeights(dimentionWeights)
 {
     switch (centroidType)
     {
@@ -39,14 +39,10 @@ double KMeans3D::calculateDistance(DataPoint3D point, DataPoint3D centroid) cons
     int normalizedPointYDistance = (point.y - centroid.y) * MAX_NORMALIZED_VALUE / maxDataPoint.y;
     int normalizedPointIntensityDistance = (point.intensity - centroid.intensity) * MAX_NORMALIZED_VALUE / maxDataPoint.intensity;
 
-    double xModifier = 0.0;
-    double yModifier = 0.3;
-    double intensityModifier = 1.0;
-
     return sqrt(
-                xModifier * normalizedPointXDistance * normalizedPointXDistance +
-                yModifier * normalizedPointYDistance * normalizedPointYDistance +
-                intensityModifier * normalizedPointIntensityDistance * normalizedPointIntensityDistance
+                dimensionWeights.xWeight * normalizedPointXDistance * normalizedPointXDistance +
+                dimensionWeights.yWeight * normalizedPointYDistance * normalizedPointYDistance +
+                dimensionWeights.intensityWeight * normalizedPointIntensityDistance * normalizedPointIntensityDistance
     );
 }
 

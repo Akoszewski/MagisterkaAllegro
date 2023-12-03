@@ -2,6 +2,7 @@
 #define KMEANS_H
 
 #include "SegmentationStrategy.h"
+#include "KMeans.h"
 
 enum class CentroidType
 {
@@ -17,7 +18,7 @@ public:
     ~KMeans();
     void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
-private:
+protected:
     int K;
     std::vector<ALLEGRO_COLOR> maskColors;
     std::vector<int> centroids;

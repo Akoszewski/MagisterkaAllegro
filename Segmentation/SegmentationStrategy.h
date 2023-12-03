@@ -8,6 +8,20 @@
 #include <vector>
 #include <memory>
 
+struct DataPoint3D
+{
+    int x;
+    int y;
+    int intensity;
+    DataPoint3D(int x, int y, int intensity)
+      : x(x), y(y), intensity(intensity)
+    {}
+    inline int operator==(const DataPoint3D& dp) const
+    {
+        return this->intensity == dp.intensity && this->x == dp.x && this->y == dp.y;
+    }
+};
+
 class SegmentationStrategy
 {
 public:

@@ -4,8 +4,10 @@
 #include "KMeans.h"
 #include "Thresholding.h"
 #include "KMeansWrap.h"
+#include "KMeans3D.h"
 #include "../Mask.h"
 #include "DisplayOptions.h"
+#include "SegmentationStrategy.h"
 
 
 enum class FilterType

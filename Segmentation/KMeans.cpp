@@ -31,7 +31,7 @@ void KMeans::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
     this->maskColors = maskColors;
 }
 
-int getMostSimilarCentroidIdx(const std::vector<int>& centroids, int pxColorGray)
+int getMostSimilarCentroidIdx(int pxColorGray, const std::vector<int>& centroids)
 {
     int minDiff = 255;
     int mostSimilarCentroidIdx = 0;
@@ -90,7 +90,7 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
         for (int x = 0; x < mask.width; x++)
         {
             int pxColorGray = getGray(al_get_pixel(orygImage.bmp.get(), x + mask.x - orygImage.x, y + mask.y - orygImage.y));
-            int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(centroids, pxColorGray);
+            int mostSimilarCentroidIdx = getMostSimilarCentroidIdx(pxColorGray, centroids);
             al_put_pixel(x, y, maskColors[mostSimilarCentroidIdx]);
             double distance = pxColorGray - centroids[mostSimilarCentroidIdx];
             totalVariation += distance * distance;

@@ -1,9 +1,11 @@
 #ifndef APP_OPTIONS_H
 #define APP_OPTIONS_H
 
-struct DisplayOptions
+enum class DisplayMode
 {
-    bool displayFiltered = true;
+    Filtered,
+    Oryginal,
+    MaskOnly
 };
 
 #endif

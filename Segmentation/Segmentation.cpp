@@ -154,6 +154,21 @@ void Segmentation::DrawMaskVisualizations(const Mask& mask, int i, int clusters)
     al_set_target_backbuffer(al_get_current_display());
 }
 
+void Segmentation::ToggleImageDisplayMode()
+{
+    switch (displayMode)
+    {
+    case DisplayMode::Filtered:
+        displayMode = DisplayMode::Oryginal;
+        break;
+    case DisplayMode::Oryginal:
+        displayMode = DisplayMode::MaskOnly;
+        break;
+    case DisplayMode::MaskOnly:
+        displayMode = DisplayMode::Filtered;
+        break;
+    }
+}
 
 void Segmentation::PerformMorphOnMask(Mask& mask, int chosenLayerColorIdx)
 {
@@ -203,9 +218,11 @@ void Segmentation::RunStep(StepOperation operation)
 
 void Segmentation::Draw()
 {
-    if (displayOptions.displayFiltered && filteredImage) {
+    if (displayMode == DisplayMode::Filtered && filteredImage) {
         filteredImage->Draw();
-    } else {
+    } else if (displayMode == DisplayMode::Oryginal) {
+        orygImage->Draw();
+    } else if (displayMode == DisplayMode::Filtered && !filteredImage) {
         orygImage->Draw();
     }
 

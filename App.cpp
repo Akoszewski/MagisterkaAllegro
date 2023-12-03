@@ -69,7 +69,7 @@ void App::Run()
                     segmentation.RunStep(StepOperation::Dilate);
                     break;
                 case ALLEGRO_KEY_V:
-                    segmentation.displayOptions.displayFiltered = segmentation.displayOptions.displayFiltered ? false : true;
+                    segmentation.ToggleImageDisplayMode();
                     break;
             }
         }

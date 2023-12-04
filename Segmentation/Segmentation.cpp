@@ -37,9 +37,9 @@ void Segmentation::Init(std::string&& imagePath)
     for (int i = 0; i < 100; i += percentageInterval)
     {
         masks.emplace_back(*orygImage.get(), 0, 100, i, i+percentageInterval);
-        // strategies.push_back(std::make_unique<KMeans3D>(7, DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}, CentroidType::Random));
-        strategies.push_back(std::make_unique<MeanShift>(DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}));
-        // strategies.push_back(std::make_unique<Dbscan>(7, DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}, CentroidType::Random));
+        strategies.push_back(std::make_unique<KMeans3D>(7, DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}, CentroidType::Random));
+        // strategies.push_back(std::make_unique<MeanShift>(10, DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}));
+        // strategies.push_back(std::make_unique<Dbscan>(7, DataPoint3D{orygImage->width, orygImage->height, 255}, DimensionWeights{0.0, 0.2, 1.0}));
         // strategies.push_back(std::make_unique<KMeansWrap>(4, CentroidType::Random));
     }
 

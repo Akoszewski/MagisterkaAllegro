@@ -9,7 +9,6 @@ class KMeansWrap : public SegmentationStrategy
 public:
     KMeansWrap(int K, CentroidType centroidType = CentroidType::Equalized, const std::vector<int>& initialCentroids = {});
     ~KMeansWrap();
-    void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
 private:
     std::vector<ALLEGRO_COLOR> maskColors;

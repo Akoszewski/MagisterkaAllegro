@@ -8,11 +8,6 @@ Thresholding::Thresholding(int threshold)
 
 Thresholding::~Thresholding(){}
 
-void Thresholding::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
-{
-    this->maskColors = maskColors;
-}
-
 int getMatchingPixelGroup(const std::vector<int>& thresholds, int pxColorGray)
 {
     int minDiff = 255;

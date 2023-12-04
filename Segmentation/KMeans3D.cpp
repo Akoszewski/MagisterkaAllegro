@@ -28,11 +28,6 @@ KMeans3D::KMeans3D(int K, DataPoint3D maxDataPoint, DimensionWeights dimentionWe
 
 KMeans3D::~KMeans3D(){}
 
-void KMeans3D::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
-{
-    this->maskColors = maskColors;
-}
-
 double KMeans3D::calculateDistance(DataPoint3D point, DataPoint3D centroid) const
 {
     int normalizedPointXDistance = (point.x - centroid.x) * MAX_NORMALIZED_VALUE / maxDataPoint.x;

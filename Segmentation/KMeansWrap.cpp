@@ -10,12 +10,6 @@ KMeansWrap::KMeansWrap(int K, CentroidType centroidType, const std::vector<int>&
 
 KMeansWrap::~KMeansWrap(){}
 
-void KMeansWrap::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
-{
-    this->maskColors = maskColors;
-}
-
-
 void KMeansWrap::RunStep(const Image& orygImage, const Mask& mask)
 {
     KMeans kmeans(K, centroidType, initialCentroids);

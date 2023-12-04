@@ -8,7 +8,6 @@ class Thresholding : public SegmentationStrategy
 public:
     Thresholding(int threshold);
     ~Thresholding();
-    void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
 private:
     int threshold;

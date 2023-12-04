@@ -4,19 +4,11 @@
 #include "SegmentationStrategy.h"
 #include "KMeans.h"
 
-struct DimensionWeights
-{
-    double xWeight;
-    double yWeight;
-    double intensityWeight;
-};
-
 class KMeans3D : public SegmentationStrategy
 {
 public:
     KMeans3D(int K, DataPoint3D maxDataPoint, DimensionWeights dimentionWeights = {1.0, 1.0, 1.0}, CentroidType centroidType = CentroidType::Equalized, const std::vector<DataPoint3D>& initialCentroids = {});
     ~KMeans3D();
-    void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
 private:
     int K;

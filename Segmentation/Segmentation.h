@@ -5,6 +5,9 @@
 #include "Thresholding.h"
 #include "KMeansWrap.h"
 #include "KMeans3D.h"
+#include "MeanShift.h"
+#include "Dbscan.h"
+
 #include "../Mask.h"
 #include "DisplayOptions.h"
 #include "SegmentationStrategy.h"

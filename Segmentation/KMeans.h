@@ -16,7 +16,6 @@ class KMeans : public SegmentationStrategy
 public:
     KMeans(int K, CentroidType centroidType = CentroidType::Equalized, const std::vector<int>& initialCentroids = {});
     ~KMeans();
-    void Init(const std::vector<ALLEGRO_COLOR>& maskColors);
     void RunStep(const Image& orygImage, const Mask& mask);
 protected:
     int K;

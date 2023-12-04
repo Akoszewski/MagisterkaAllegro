@@ -26,11 +26,6 @@ KMeans::KMeans(int K, CentroidType centroidType, const std::vector<int>& initial
 
 KMeans::~KMeans(){}
 
-void KMeans::Init(const std::vector<ALLEGRO_COLOR>& maskColors)
-{
-    this->maskColors = maskColors;
-}
-
 int getMostSimilarCentroidIdx(int pxColorGray, const std::vector<int>& centroids)
 {
     int minDiff = 255;

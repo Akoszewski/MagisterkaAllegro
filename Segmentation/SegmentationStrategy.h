@@ -33,7 +33,7 @@ class SegmentationStrategy
 {
 public:
     SegmentationStrategy() = default;
-    virtual void Init(const std::vector<ALLEGRO_COLOR>& maskColors)
+    void Init(const std::vector<ALLEGRO_COLOR>& maskColors)
     {
         this->maskColors = maskColors;
     }

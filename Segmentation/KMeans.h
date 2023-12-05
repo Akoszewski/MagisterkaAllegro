@@ -19,7 +19,6 @@ public:
     void RunStep(const Image& orygImage, const Mask& mask);
 protected:
     int K;
-    std::vector<ALLEGRO_COLOR> maskColors;
     std::vector<int> centroids;
     std::vector<int> previousCentroids;
 

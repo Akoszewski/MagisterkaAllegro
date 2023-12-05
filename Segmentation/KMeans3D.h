@@ -12,7 +12,6 @@ public:
     void RunStep(const Image& orygImage, const Mask& mask);
 private:
     int K;
-    std::vector<ALLEGRO_COLOR> maskColors;
     std::vector<DataPoint3D> centroids;
     std::vector<DataPoint3D> previousCentroids;
     DataPoint3D maxDataPoint;

@@ -11,7 +11,6 @@ public:
     ~KMeansWrap();
     void RunStep(const Image& orygImage, const Mask& mask);
 private:
-    std::vector<ALLEGRO_COLOR> maskColors;
     CentroidType centroidType;
     std::vector<int> initialCentroids;
     int K;

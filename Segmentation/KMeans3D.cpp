@@ -3,8 +3,6 @@
 #include <random>
 #include <stdexcept>
 
-constexpr int MAX_NORMALIZED_VALUE = 1000;
-
 KMeans3D::KMeans3D(int K, DataPoint3D maxDataPoint, DimensionWeights dimentionWeights, CentroidType centroidType, const std::vector<DataPoint3D>& initialCentroids)
   : K(K), maxDataPoint(maxDataPoint), dimensionWeights(dimentionWeights)
 {

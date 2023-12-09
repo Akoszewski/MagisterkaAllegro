@@ -18,7 +18,7 @@ def normalize_and_weight(data, min_val, max_val, weight):
     normalized_data = 1000 * (data - min_val) / (max_val - min_val)
     return normalized_data * weight
 
-def process_image(file_path, weight_x=0.1, weight_y=0.4, weight_intensity=1.0):
+def process_image(file_path, weight_x=0.0, weight_y=0.0, weight_intensity=1.0):
     # Load image in grayscale to get intensity values
     image = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
     if image is None:
@@ -39,7 +39,7 @@ def process_image(file_path, weight_x=0.1, weight_y=0.4, weight_intensity=1.0):
     data = np.stack((x_normalized.ravel(), y_normalized.ravel(), intensity_normalized.ravel()), axis=1)
 
     # Perform MeanShift clustering
-    clustering = MeanShift(bandwidth=2).fit(data)
+    clustering = MeanShift(bandwidth=30).fit(data)
     labels = clustering.labels_
 
     # Color each pixel according to its cluster
@@ -53,7 +53,9 @@ def process_image(file_path, weight_x=0.1, weight_y=0.4, weight_intensity=1.0):
     return image, colored_image
 
 # Process the image
-file_path = '../pictures/cropped_images/roiCropped.png'
+# file_path = '../pictures/cropped_images/roiCropped.png'
+file_path = 'out.png'
+
 original_image, colored_image = process_image(file_path)
 
 # Display original and clustered images if the process was successful

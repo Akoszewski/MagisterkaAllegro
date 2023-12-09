@@ -17,10 +17,10 @@ struct DimensionWeights
 
 struct DataPoint3D
 {
-    int x;
-    int y;
-    int intensity;
-    DataPoint3D(int x, int y, int intensity)
+    double x;
+    double y;
+    double intensity;
+    DataPoint3D(double x, double y, double intensity)
       : x(x), y(y), intensity(intensity)
     {}
     inline int operator==(const DataPoint3D& dp) const
@@ -28,6 +28,8 @@ struct DataPoint3D
         return this->intensity == dp.intensity && this->x == dp.x && this->y == dp.y;
     }
 };
+
+constexpr int MAX_NORMALIZED_VALUE = 1000;
 
 class SegmentationStrategy
 {

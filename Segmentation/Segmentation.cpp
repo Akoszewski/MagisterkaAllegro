@@ -85,13 +85,15 @@ void Segmentation::findROI()
     printf("Border percentages: %d %d\n", percentageY1, percentageY2);
 
 
-    DataPoint3D maxValues{orygImage->width, orygImage->height, 255};
-    strategy = std::make_unique<KMeans3D>(7, maxValues, DimensionWeights{0.0, 0.3, 1.0}, CentroidType::Random);
+    Mask maskRoi(*orygImage, 0, 100, percentageY1, percentageY2);
+    DataPoint3D maxValues{maskRoi.width, maskRoi.height, 255};
+
+    strategy = std::make_unique<KMeans3D>(7, maxValues, DimensionWeights{0.0, 0.2, 1.0}, CentroidType::Random);
     // strategy = std::make_unique<MeanShift>(240, 100, maxValues, DimensionWeights{0.0, 0.2, 1.0});
     // strategy = std::make_unique<Dbscan>(7, maxValues, DimensionWeights{0.0, 0.2, 1.0});
     // strategy = std::make_unique<KMeansWrap>(4, CentroidType::Random);
 
-    segmentationRegions.emplace_back(Mask(*orygImage, 0, 100, percentageY1, percentageY2), std::move(strategy), maskColors);
+    segmentationRegions.emplace_back(std::move(maskRoi), std::move(strategy), maskColors);
 }
 
 void Segmentation::Init()

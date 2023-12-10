@@ -10,11 +10,11 @@ public:
     KMeans3D(int K, DataPoint3D maxDataPoint, DimensionWeights dimentionWeights = {1.0, 1.0, 1.0}, CentroidType centroidType = CentroidType::Equalized, const std::vector<DataPoint3D>& initialCentroids = {});
     ~KMeans3D();
     void RunStep(const Image& orygImage, const Mask& mask);
+    DataPoint3D maxDataPoint;
 private:
     int K;
     std::vector<DataPoint3D> centroids;
     std::vector<DataPoint3D> previousCentroids;
-    DataPoint3D maxDataPoint;
     DimensionWeights dimensionWeights;
 
     int getClusterFromColor(ALLEGRO_COLOR color);

@@ -42,7 +42,7 @@ int getMostSimilarCentroidIdx(int pxColorGray, const std::vector<int>& centroids
 
 int KMeans::getClusterFromColor(ALLEGRO_COLOR color)
 {
-    for (int i = 0; i < K; i++)
+    for (int i = 0; i < MAX_MASK_COLORS; i++)
     {
         if (areColorsEqual(color, maskColors[i])) {
             return i;
@@ -74,6 +74,16 @@ std::vector<int> KMeans::getEqualizedCentroids() const
         initialCentroids.push_back(i * 255/K);
     }
     return initialCentroids;
+}
+
+void KMeans::printCentroids() const
+{
+    printf("Centroids: ");
+    for (const auto& centroid : centroids)
+    {
+        printf("{%d} ", centroid);
+    }
+    printf("\n");
 }
 
 void KMeans::RunStep(const Image& orygImage, const Mask& mask)
@@ -122,7 +132,9 @@ void KMeans::RunStep(const Image& orygImage, const Mask& mask)
         }
     }
 
-    printf("Step: %d Variation: %f Centroids: %d %d %d %d %d\n", step, totalVariation, centroids[0], centroids[1], centroids[2], centroids[3], centroids[4]);
+    printf("Step: %d Variation: %f\n", step, totalVariation);
+    printCentroids();
+    printf("================================\n");
 
     if (centroids == previousCentroids) {
         printf("Segmentation finished\n");

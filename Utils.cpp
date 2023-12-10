@@ -14,3 +14,14 @@ bool areColorsEqual(const ALLEGRO_COLOR &color1, const ALLEGRO_COLOR &color2)
            color1.b == color2.b &&
            color1.a == color2.a;
 }
+
+int getClusterFromColor(ALLEGRO_COLOR color, std::vector<ALLEGRO_COLOR> maskColors)
+{
+    for (int i = 0; i < MAX_MASK_COLORS; i++)
+    {
+        if (areColorsEqual(color, maskColors[i])) {
+            return i;
+        }
+    }
+    return -1;
+}

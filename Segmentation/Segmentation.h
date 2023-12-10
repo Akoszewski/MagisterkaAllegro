@@ -14,6 +14,8 @@
 #include "SegmentationParams.h"
 #include "SegmentationRegion.h"
 
+#include <string>
+
 
 enum class FilterType
 {
@@ -32,9 +34,9 @@ enum class StepOperation
 class Segmentation
 {
 public:
-    Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams, const std::vector<ALLEGRO_COLOR>& maskColors);
+    Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams, const std::vector<ALLEGRO_COLOR>& maskColors, bool isImgCropped);
     ~Segmentation();
-    void Init(std::string&& imagePath);
+    void Init();
     void Draw();
     void RunStep(StepOperation operation);
     std::unique_ptr<Image> FilterImage(const Image& orygImage, int windowWidth, int windowHeight, FilterType filterType);
@@ -49,13 +51,17 @@ public:
     
     std::vector<SegmentationRegion> segmentationRegions;
     int currentVisualizedRegion{};
+    std::string imagePath;
+
+    int layerVisualizationY{};
+    int layerVisualizationsMargin{};
 private:
+    bool isImageCropped = false;
     int step;
     SegmentationParams segmentationParams;
     int chooseLayerForMorphoology(const Mask& mask);
-    int layerVisualizationY{};
-    int layerVisualizationsMargin{};
     std::vector<ALLEGRO_COLOR> maskColors{};
+    void findROI();
 };
 
 #endif

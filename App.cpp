@@ -51,10 +51,10 @@ App::App(int size_x, int size_y)
 
     SegmentationParams segmentationParams;
 
-    // std::string imagePath = "pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg";
-    std::string imagePath = "/home/arek/MagisterkaAllegro/pictures/dataset/NORMAL8.jpeg";
+    std::string imagePath = "pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg";
+    // std::string imagePath = "/home/arek/MagisterkaAllegro/pictures/dataset/NORMAL16.jpeg";
     // std::string imagePath = "pictures/cropped_images/roiCropped.png";
-    segmentation = std::make_unique<Segmentation>(std::move(imagePath), std::move(segmentationParams), maskColors);
+    segmentation = std::make_unique<Segmentation>(std::move(imagePath), std::move(segmentationParams), maskColors, false);
     
     segmentation->orygImage->Center();
     segmentation->orygImage->y = 30;

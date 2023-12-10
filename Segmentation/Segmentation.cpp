@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
-#include <string>
 
 // From otsu method:
 // Best threshold: 100
@@ -15,17 +14,88 @@
 // Best threshold: 138
 // Best threshold: 116
 
-Segmentation::Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams, const std::vector<ALLEGRO_COLOR>& maskColors)
-  : step(0), layerVisualizationsMargin(20), segmentationParams(std::move(segmentationParams)), maskColors(maskColors)
+Segmentation::Segmentation(std::string&& imagePath, SegmentationParams&& segmentationParams,
+        const std::vector<ALLEGRO_COLOR>& maskColors, bool isImageCropped)
+  : step(0), layerVisualizationsMargin(20), segmentationParams(std::move(segmentationParams))
+  , maskColors(maskColors), isImageCropped(isImageCropped), imagePath(std::move(imagePath))
 {
-    Init(std::move(imagePath));
+    orygImage = std::make_unique<Image>(this->imagePath.c_str());
+    filteredImage = std::make_unique<Image>(*orygImage);
+    
+    if (!isImageCropped) {
+        findROI();
+        isImageCropped = true;
+    } else {
+        Init();
+    }
 }
 
-void Segmentation::Init(std::string&& imagePath)
+void Segmentation::findROI()
 {
-    orygImage = std::make_unique<Image>(imagePath.c_str());
-    filteredImage = std::make_unique<Image>(*orygImage);
+    printf("Finding ROI\n");
+    std::unique_ptr<SegmentationStrategy> strategy = std::make_unique<KMeansWrap>(2, CentroidType::Equalized);
+    segmentationRegions.emplace_back(Mask(*orygImage, 0, 100, 0, 100), std::move(strategy), maskColors);
+    segmentationRegions[0].strategy->Init(maskColors);
+    auto filtered = FilterImage(*orygImage, 11, 11, FilterType::Median);
 
+    al_set_target_bitmap(segmentationRegions[0].mask.bmp.get());
+    al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+    segmentationRegions[0].strategy->RunStep(*filtered, segmentationRegions[0].mask);
+    al_set_target_backbuffer(al_get_current_display());
+
+    auto& mask = segmentationRegions[0].mask;
+    al_save_bitmap("mask.bmp", mask.bmp.get());
+
+    int minFirstBorderY = mask.height;
+    int maxSecondBorderY = 0;
+    for (int x = 0; x < segmentationRegions[0].mask.width; x++)
+    {
+        int firstBorderY = 0;
+        int secondBorderY = 0;
+        int prevCluster = 0;
+        for (int y = 0; y < segmentationRegions[0].mask.height; y++)
+        {
+            ALLEGRO_COLOR pixelColor = al_get_pixel(mask.bmp.get(), x, y);
+            int cluster = getClusterFromColor(pixelColor, maskColors);
+            if (y > 0) {
+                if (prevCluster != cluster) {
+                    if (firstBorderY == 0) {
+                        firstBorderY = y;
+                    } else {
+                        secondBorderY = y;
+                    }
+                }
+            }
+            prevCluster = cluster;
+        }
+        if (firstBorderY < minFirstBorderY) {
+            minFirstBorderY = firstBorderY;
+        }
+        if (secondBorderY > maxSecondBorderY) {
+            maxSecondBorderY = secondBorderY;
+        }
+    }
+
+    printf("Border values: %d %d\n", minFirstBorderY, maxSecondBorderY);
+    segmentationRegions.clear();
+
+    int percentageY1 = minFirstBorderY / static_cast<float>(mask.height) * 100;
+    int percentageY2 = maxSecondBorderY / static_cast<float>(mask.height) * 100;
+
+    printf("Border percentages: %d %d\n", percentageY1, percentageY2);
+
+
+    DataPoint3D maxValues{orygImage->width, orygImage->height, 255};
+    strategy = std::make_unique<KMeans3D>(7, maxValues, DimensionWeights{0.0, 0.3, 1.0}, CentroidType::Random);
+    // strategy = std::make_unique<MeanShift>(240, 100, maxValues, DimensionWeights{0.0, 0.2, 1.0});
+    // strategy = std::make_unique<Dbscan>(7, maxValues, DimensionWeights{0.0, 0.2, 1.0});
+    // strategy = std::make_unique<KMeansWrap>(4, CentroidType::Random);
+
+    segmentationRegions.emplace_back(Mask(*orygImage, 0, 100, percentageY1, percentageY2), std::move(strategy), maskColors);
+}
+
+void Segmentation::Init()
+{
     int percentageInterval = 100;
     for (int i = 0; i < 100; i += percentageInterval)
     {
@@ -39,8 +109,6 @@ void Segmentation::Init(std::string&& imagePath)
 
         segmentationRegions.emplace_back(Mask(*orygImage, 0, 100, i, i+percentageInterval), std::move(strategy), maskColors);
     }
-
-    layerVisualizationY = orygImage->y + orygImage->height + layerVisualizationsMargin;
 }
 
 int Segmentation::chooseLayerForMorphoology(const Mask& mask)
@@ -131,7 +199,8 @@ void Segmentation::ResetLayerVisualizations(SegmentationRegion& region, int clus
     for (int i = 0; i < clusters; i++)
     {
         region.layerVisualizations.emplace_back(region.mask);
-        region.layerVisualizations[i].y = layerVisualizationY + i*(region.layerVisualizations[i].height + layerVisualizationsMargin);
+        region.layerVisualizations[i].x = 850;
+        region.layerVisualizations[i].y = layerVisualizationsMargin + i*(region.layerVisualizations[i].height + layerVisualizationsMargin);
     }
 }
 
@@ -223,9 +292,11 @@ void Segmentation::Draw()
         segmentationRegions[i].mask.Draw();
     }
 
-    for (auto& layerVisualization : segmentationRegions[currentVisualizedRegion].layerVisualizations)
-    {
-        layerVisualization.Draw();
+    if (!segmentationRegions.empty()) {
+        for (auto& layerVisualization : segmentationRegions[currentVisualizedRegion].layerVisualizations)
+        {
+            layerVisualization.Draw();
+        }
     }
 }
 

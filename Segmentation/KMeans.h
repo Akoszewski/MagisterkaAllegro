@@ -25,6 +25,7 @@ protected:
     int getClusterFromColor(ALLEGRO_COLOR color);
     std::vector<int> getRandomCentroids() const;
     std::vector<int> getEqualizedCentroids() const;
+    void printCentroids() const;
 };
 
 #endif

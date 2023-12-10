@@ -69,7 +69,7 @@ void KMeans3D::printCentroids() const
     printf("Centroids: ");
     for (const auto& centroid : centroids)
     {
-        printf("{%d %d %d} ", centroid.x, centroid.y, centroid.intensity);
+        printf("{%f %f %f} ", centroid.x, centroid.y, centroid.intensity);
     }
     printf("\n");
 }

@@ -22,11 +22,39 @@ App::App(int size_x, int size_y)
         return;
     }
 
+    unsigned char maskTransparency = 0;
+    // maskColors =
+    // {
+    //     al_map_rgba(100, 0, 0, maskTransparency),
+    //     al_map_rgba(0, 100, 0, maskTransparency),
+    //     al_map_rgba(0, 0, 100, maskTransparency),
+    //     al_map_rgba(255, 0, 0, maskTransparency),
+    //     al_map_rgba(0, 255, 0, maskTransparency),
+    //     al_map_rgba(0, 0, 255, maskTransparency),
+    //     al_map_rgba(100, 100, 0, maskTransparency),
+    //     al_map_rgba(0, 100, 100, maskTransparency),
+    //     al_map_rgba(255, 255, 0, maskTransparency),
+    //     al_map_rgba(0, 255, 255, maskTransparency),
+    // };
+    std::vector<ALLEGRO_COLOR> maskColors =
+    {
+        al_map_rgba(0, 0, 0, maskTransparency),             // Black
+        al_map_rgba(0, 100, 0, maskTransparency),           // Green
+        al_map_rgba(100, 50, 0, maskTransparency),          // Orange
+        al_map_rgba(0, 0, 100, maskTransparency),           // Blue
+        al_map_rgba(100, 100, 0, maskTransparency),         // Yellow
+        al_map_rgba(50, 0, 100, maskTransparency),          // Purple
+        al_map_rgba(100, 0, 100, maskTransparency),         // Magenta
+        al_map_rgba(100, 0, 50, maskTransparency),          // Rose
+        al_map_rgba(100, 100, 100, maskTransparency),       // White
+    };
+
     SegmentationParams segmentationParams;
 
     // std::string imagePath = "pictures/labelled_dataset/request_form_github/X/06 OS - Copy.jpeg";
-    std::string imagePath = "pictures/cropped_images/roiCropped.png";
-    segmentation = std::make_unique<Segmentation>(std::move(imagePath), std::move(segmentationParams));
+    std::string imagePath = "/home/arek/MagisterkaAllegro/pictures/dataset/NORMAL8.jpeg";
+    // std::string imagePath = "pictures/cropped_images/roiCropped.png";
+    segmentation = std::make_unique<Segmentation>(std::move(imagePath), std::move(segmentationParams), maskColors);
     
     segmentation->orygImage->Center();
     segmentation->orygImage->y = 30;
@@ -34,10 +62,10 @@ App::App(int size_x, int size_y)
     segmentation->filteredImage->Center();
     segmentation->filteredImage->y = 30;
 
-    for (auto& mask : segmentation->masks)
+    for (auto& region : segmentation->segmentationRegions)
     {
-        mask.x += segmentation->orygImage->x;
-        mask.y += segmentation->orygImage->y;
+        region.mask.x += segmentation->orygImage->x;
+        region.mask.y += segmentation->orygImage->y;
     }
 
     printf("Usage:\nZ - Filter\nX - Segmentation\nC - Dilate\nV - toggle display filtered/oryginal\n");

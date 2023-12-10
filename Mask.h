@@ -14,7 +14,6 @@ public:
     std::vector<ALLEGRO_COLOR> maskColors;
 private:
     void initMask(const Image& orygImage, byte xStartPercent, byte xEndPercent, byte yStartPercent, byte yEndPercent);
-    byte maskTransparency;
 };
 
 #endif // MASK
